@@ -107,7 +107,7 @@
   }
   
   .nav-icon {
-    margin-right: 2px; /* Ajusta este valor según el espacio que desees entre el icono y el texto */
+    margin-right: 4px; /* Ajusta este valor según el espacio que desees entre el icono y el texto */
   }
 
   .dropdown-divider {
@@ -120,4 +120,8 @@
     height: auto; 
     /* border: 1px solid #ccc; */
    
+  }
+
+  .icono {
+    margin-right: 10px; /* Ajusta el valor según el espacio que desees */
   }

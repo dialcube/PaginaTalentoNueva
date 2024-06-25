@@ -7,6 +7,7 @@ import { BrowserRouter as Router,  Routes } from "react-router-dom";
 
 import './Components/TalentoMejorada.css';
 import CrearSesion from "./Components/CrearSesion";
+import Calificaciones from "./Components/Calificaciones";
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
         <TalentoMejorada />
         {/* <Sesiones/>
         <CrearSesion/> */}
+           {/* <Calificaciones /> */}
         <Routes>
           
           {/* <Route path="/crearusuarios" element={<CrearUsuario />} /> */}

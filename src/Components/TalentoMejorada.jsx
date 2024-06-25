@@ -21,13 +21,15 @@ import GUsuarios from "../Img/GUsuarios.svg";
 import GBootcamp from "../Img/GBootcamp.svg";
 import { useNavigate } from "react-router-dom";
 import Usuarios from "./Usuarios";
-import {  Route, Routes } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import CrearUsuario from "./CrearUsuario";
 import EditarUsuario from "./EditarUsuario";
 import AsistenciasSesiones from "./AsistenciasSesiones";
 import Sesiones from "./Sesiones";
 import CrearSesion from "./CrearSesion";
 import EditarSesion from "./EditarSesion";
+import Calificaciones from "./Calificaciones";
+import Califica from "../Img/Califica.svg";
 
 const NavItem = ({ name, path, icon }) => {
   let navigate = useNavigate();
@@ -160,13 +162,20 @@ export default function TalentoMejorada() {
                         <NavItem
                           name="Gestion Usuarios"
                           path="/usuarios"
-                          icon={GUsuarios}    />
-                          
-                          <NavItem
+                          icon={GUsuarios}
+                        />
+
+                        <NavItem
                           name="Sesiones Bootcamps"
                           path="/sesiones"
-                          icon={GBootcamp}                        />
-                       
+                          icon={GBootcamp}
+                        />
+                        <NavItem
+                          name="Calificaciones"
+                          path="/calificaciones"
+                          icon={Califica}
+                        />
+
                         {/* <Nav.Link href="#">
                           <div className="nav-item">
                             <img
@@ -227,12 +236,14 @@ export default function TalentoMejorada() {
                   <Route path="/usuarios" element={<Usuarios />} />
                   <Route path="/crearusuarios" element={<CrearUsuario />} />
                   <Route path="/editarusuario" element={<EditarUsuario />} />
-                  <Route path="/asistenciassesiones" element={<AsistenciasSesiones />} />
+                  <Route
+                    path="/asistenciassesiones"
+                    element={<AsistenciasSesiones />}
+                  />
                   <Route path="/sesiones" element={<Sesiones />} />
                   <Route path="/crearsesiones" element={<CrearSesion />} />
                   <Route path="/editarsesion" element={<EditarSesion />} />
-                  
-
+                  <Route path="/calificaciones" element={<Calificaciones />} />
                 </Routes>
               </div>
             </Row>

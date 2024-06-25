@@ -29,8 +29,7 @@ export default function Sesiones() {
               <th scope="col">Curso</th>
               <th scope="col">Componente</th>
               <th scope="col">Nombre Sesion</th>
-              <th scope="col">Fecha</th>
-              <th scope="col">Horario</th>
+              <th scope="col">Fecha</th>              
               <th scope="col">Acciones Usuario</th>
             </tr>
           </thead>
@@ -52,11 +51,11 @@ export default function Sesiones() {
 
             <tr>
               <td>1</td>
-              <td>Desarrollo Web Full Stack Avanzado</td>
+              <td>Desarrollo Web Full Stack Intermedio</td>
               <td>Componente Tecnico </td>
               <td>Sesion 1</td>
               <td>30/06/2024</td>
-              <td>6:00 am - 8:00 am</td>
+            
             
               <td>
                 <a
@@ -77,11 +76,11 @@ export default function Sesiones() {
             </tr>
             <tr>
               <td>2</td>
-              <td>Desarrollo Web Full Stack Avanzado</td>
+              <td>Desarrollo Web Full Stack Intermedio</td>
               <td>Componente Ingles </td>
               <td>Sesion 10</td>
               <td>15/07/2024</td>
-              <td>6:00 am - 8:00 am</td>
+              
               <td>
                 <a
                   // href="/editarusuario/<%= user.id %>"

@@ -1,10 +1,22 @@
 import React from "react";
 
-export default function CrearSesion() {
+export default function EditarSesion() {
   return (
     <div>
-      <h2>Creacion de Sesion</h2>
+      <h2>Actualizar Sesion</h2>
       <form action="/save" method="POST">
+        <div class="mb-3">
+          <label for="id" class="form-label">
+            Id Sesion
+          </label>
+          <input
+            type="number"
+            class="form-control"
+            name="idsesion"
+            id="idsesion"
+            disabled
+          />
+        </div>
         <div class="mb-3">
           <label for="rol" class="form-label">
             Curso
@@ -39,13 +51,7 @@ export default function CrearSesion() {
           <label for="nombre" class="form-label">
             Nombre Sesion
           </label>
-          <input
-            type="text"
-            class="form-control"
-            name="nombre"
-            id="nombre"
-            placeholder="Ingrese nombre sesion"
-          />
+          <input type="text" class="form-control" name="nombre" id="nombre" />
         </div>
         <div class="mb-3">
           <label for="desc" class="form-label">
@@ -63,13 +69,7 @@ export default function CrearSesion() {
           <label for="fecha" class="form-label">
             Fecha
           </label>
-          <input
-            type="date"
-            class="form-control"
-            name="fecha"
-            id="fecha"
-            placeholder="Ingrese fecha sesion"
-          />
+          <input type="date" class="form-control" name="fecha" id="fecha" />
         </div>
         <div class="mb-3">
           <label>

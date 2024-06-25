@@ -25,6 +25,9 @@ import {  Route, Routes } from "react-router-dom";
 import CrearUsuario from "./CrearUsuario";
 import EditarUsuario from "./EditarUsuario";
 import AsistenciasSesiones from "./AsistenciasSesiones";
+import Sesiones from "./Sesiones";
+import CrearSesion from "./CrearSesion";
+import EditarSesion from "./EditarSesion";
 
 const NavItem = ({ name, path, icon }) => {
   let navigate = useNavigate();
@@ -157,21 +160,14 @@ export default function TalentoMejorada() {
                         <NavItem
                           name="Gestion Usuarios"
                           path="/usuarios"
-                          icon={GUsuarios}
-                        />
-                        {/* <Nav.Link path="/usuarios">
-                          <div className="nav-item">
-                            <img
-                              src={GUsuarios}
-                              alt="Gear Icon"
-                              className="icono bg-lime-300"
-                            />{" "}
-                            <span className="hover-menu">
-                              Gestion Usuarios
-                            </span>
-                          </div>
-                        </Nav.Link> */}
-                        <Nav.Link href="#">
+                          icon={GUsuarios}    />
+                          
+                          <NavItem
+                          name="Sesiones Bootcamps"
+                          path="/sesiones"
+                          icon={GBootcamp}                        />
+                       
+                        {/* <Nav.Link href="#">
                           <div className="nav-item">
                             <img
                               src={GBootcamp}
@@ -179,10 +175,10 @@ export default function TalentoMejorada() {
                               className="icono bg-lime-300"
                             />{" "}
                             <span className="hover-menu">
-                              Gestion Bootcamps
+                              Sesiones Bootcamps
                             </span>
                           </div>
-                        </Nav.Link>
+                        </Nav.Link> */}
                       </Nav>
                     </Navbar.Collapse>
                   </Container>
@@ -232,6 +228,11 @@ export default function TalentoMejorada() {
                   <Route path="/crearusuarios" element={<CrearUsuario />} />
                   <Route path="/editarusuario" element={<EditarUsuario />} />
                   <Route path="/asistenciassesiones" element={<AsistenciasSesiones />} />
+                  <Route path="/sesiones" element={<Sesiones />} />
+                  <Route path="/crearsesiones" element={<CrearSesion />} />
+                  <Route path="/editarsesion" element={<EditarSesion />} />
+                  
+
                 </Routes>
               </div>
             </Row>

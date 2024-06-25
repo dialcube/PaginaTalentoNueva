@@ -27,7 +27,7 @@
    background-color: color(from color srgb r g b);
   }
   .nav-link {
-    width: 200px; /* Ancho deseado para los enlaces */
+    width: 250px; /* Ancho deseado para los enlaces */
     white-space: nowrap; /* Evita que el texto se salte a la siguiente línea */
     margin-left: 0%;
     text-align: left; /* Justifica el texto a la izquierda */
@@ -107,7 +107,7 @@
   }
   
   .nav-icon {
-    margin-right: 2px; /* Ajusta este valor según el espacio que desees entre el icono y el texto */
+    margin-right: 4px; /* Ajusta este valor según el espacio que desees entre el icono y el texto */
   }
 
   .dropdown-divider {
@@ -120,4 +120,8 @@
     height: auto; 
     /* border: 1px solid #ccc; */
    
+  }
+
+  .icono {
+    margin-right: 10px; /* Ajusta el valor según el espacio que desees */
   }

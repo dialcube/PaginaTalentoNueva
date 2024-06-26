@@ -15,14 +15,13 @@ function App() {
     <div className="App">
       
       <Router>
-        <Login />
-        {/* <Sesiones/>
-        <CrearSesion/> */}
-           {/* <Calificaciones /> */}
+        {/* <Login /> */}
+         <TalentoMejorada />
+     
         <Routes>
           
           {/* <Route path="/crearusuarios" element={<CrearUsuario />} /> */}
-          <Route path="/talentomejorada" element={<TalentoMejorada />} />
+          {/* <Route path="/talentomejorada" element={<TalentoMejorada />} /> */}
 
         </Routes>
       </Router>

@@ -18,12 +18,12 @@ const Calificaciones = () => {
   const [editIndex, setEditIndex] = useState(null);
   const [editNotes, setEditNotes] = useState({});
 
-  const handleEdit = (index) => {
-    setEditIndex(index);
+  const handleEdit = (idx) => {
+    setEditIndex(idx);
     setEditNotes({
-      nota1: students[index].nota1,
-      nota2: students[index].nota2,
-      nota3: students[index].nota3,
+      nota1: students[idx].nota1,
+      nota2: students[idx].nota2,
+      nota3: students[idx].nota3,
     });
   };
 
@@ -32,10 +32,10 @@ const Calificaciones = () => {
     setEditNotes({ ...editNotes, [name]: value });
   };
 
-  const handleSave = (index) => {
+  const handleSave = (idx) => {
     const updatedStudents = [...students];
-    updatedStudents[index] = {
-      ...updatedStudents[index],
+    updatedStudents[idx] = {
+      ...updatedStudents[idx],
       ...editNotes,
       nota1: parseFloat(editNotes.nota1),
       nota2: parseFloat(editNotes.nota2),
@@ -65,12 +65,12 @@ const Calificaciones = () => {
           </tr>
         </thead>
         <tbody>
-          {students.map((student, index) => (
+          {students.map((student, idx) => (
             <tr key={student.id}>
               <td>{student.nombre}</td>
               <td>{student.apellido}</td>
               <td>
-                {editIndex === index ? (
+                {editIndex === idx ? (
                   <input
                     type="number"
                     name="nota1"
@@ -82,7 +82,7 @@ const Calificaciones = () => {
                 )}
               </td>
               <td>
-                {editIndex === index ? (
+                {editIndex === idx ? (
                   <input
                     type="number"
                     name="nota2"
@@ -94,7 +94,7 @@ const Calificaciones = () => {
                 )}
               </td>
               <td>
-                {editIndex === index ? (
+                {editIndex === idx ? (
                   <input
                     type="number"
                     name="nota3"
@@ -109,12 +109,12 @@ const Calificaciones = () => {
                 {calculateAverage(student.nota1, student.nota2, student.nota3)}
               </td>
               <td>
-                {editIndex === index ? (
-                  <Button variant="success" onClick={() => handleSave(index)}>
+                {editIndex === idx ? (
+                  <Button variant="success" onClick={() => handleSave(idx)}>
                     Guardar
                   </Button>
                 ) : (
-                  <Button variant="primary" onClick={() => handleEdit(index)}>
+                  <Button variant="primary" onClick={() => handleEdit(idx)}>
                     Editar
                   </Button>
                 )}

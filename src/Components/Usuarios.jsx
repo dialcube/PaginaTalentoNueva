@@ -2,9 +2,27 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Adicionar from "../Img/Adicionar.svg";
+import  { useEffect, useState } from "react";
+import axios from 'axios';
 
 export default function Usuarios() {
   const navigate = useNavigate();
+  const url = 'http://localhost:8080/Usuario/';
+  const [usuarios, setUsuarios] = useState([]);
+
+  useEffect(() => {
+    getSesiones();
+  }, []);
+
+  const getSesiones = async () => {
+    try {
+      const response = await axios.get(url);
+      setUsuarios(response.data.results); // Asumo que el formato de respuesta tiene un campo 'results'
+    } catch (error) {
+      console.error('Error fetching Usuarios:', error);
+    }
+  }
+
   const validar = (ev) => {
     ev.preventDefault(); //evito que el formlario se recargue al dar presionar el button
     navigate("/crearusuarios");
@@ -42,46 +60,37 @@ export default function Usuarios() {
             </tr>
           </thead>
           <tbody>
-            {/* <% results.forEach((user)=> { %>
-          <tr>
-            <th scope="row"><%= user.idUsuario %></th>
-            <td><%= user.Identificacion %></td>
-            <td><%= user.nombres %></td>
-            <td><%= user.apellidos %></td>
-            <td><%= user.email %></td>           
-            <td><%= user.roll %></td>
-            <td>
-                <a href="/editarusuario/<%= user.id %>" class="btn btn-outline-success">Editar</a>
-                <a href="/eliminarusuario/<%= user.id %>" class="btn btn-outline-danger" onclick="return confirm('¿Estás seguro de que deseas eliminar este usuario?');">Eliminar</a>
-            </td>
-          </tr>
-          <%})%> */}
-
-            <tr>
-              <td>1</td>
-              <td>16456789</td>
-              <td>usuario1 </td>
-              <td>Apellido 1</td>
-              <td>Email 1</td>
-              <td>Admin</td>
-              <td>
-                <a
-                  // href="/editarusuario/<%= user.id %>"
-                  href="/editarusuario"
-                  class="btn btn-outline-success"
-                >
-                  Editar
-                </a>
-                <a
-                  href="/eliminarusuario/<%= user.id %>"
-                  class="btn btn-outline-danger"
-                  onclick="return confirm('¿Estás seguro de que deseas eliminar este usuario?');"
-                >
-                  Eliminar
-                </a>
-              </td>
-            </tr>
+            {usuarios.map((usuario) => (
+              <tr key={usuario.IdUsuario}>
+                <td>{usuario.IdUsuario}</td>
+                <td>{usuario.Identificacion}</td>
+                <td>{usuario.Nombres}</td>
+                <td>{usuario.Apellidos}</td>
+                <td>{usuario.Email}</td>
+                <td>{usuario.Rol}</td>
+                <td>
+                  <a
+                    href={`/editarsesion/${usuario.IdUsuario}`}
+                    className="btn btn-outline-success"
+                  >
+                    Editar
+                  </a>
+                  <a
+                    href={`/eliminarsesion/${usuario.IdUsuario}`}
+                    className="btn btn-outline-danger"
+                    onClick={() => {
+                      if (window.confirm('¿Estás seguro de que deseas eliminar esta sesión?')) {
+                        // Aquí puedes realizar la lógica para eliminar la sesión si es necesario
+                      }
+                    }}
+                  >
+                    Eliminar
+                  </a>
+                </td>
+              </tr>
+            ))}
           </tbody>
+
         </table>
       </div>
     </div>

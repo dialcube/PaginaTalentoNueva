@@ -235,7 +235,7 @@ export default function TalentoMejorada() {
 
                   <Route path="/usuarios" element={<Usuarios />} />
                   <Route path="/crearusuarios" element={<CrearUsuario />} />
-                  <Route path="/editarusuario" element={<EditarUsuario />} />
+                  <Route path="/editarusuario/:id" element={<EditarUsuario />} />
                   <Route
                     path="/asistenciassesiones"
                     element={<AsistenciasSesiones />}

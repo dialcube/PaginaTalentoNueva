@@ -27,6 +27,7 @@ export default function Usuarios() {
     ev.preventDefault(); //evito que el formlario se recargue al dar presionar el button
     navigate("/crearusuarios");
   };
+
   return (
     <div>
       {/* <link
@@ -70,16 +71,17 @@ export default function Usuarios() {
                 <td>{usuario.Rol}</td>
                 <td>
                   <a
-                    href={`/editarsesion/${usuario.IdUsuario}`}
+                    href={`/editarusuario/${usuario.IdUsuario}`}
                     className="btn btn-outline-success"
+                    
                   >
                     Editar
                   </a>
                   <a
-                    href={`/eliminarsesion/${usuario.IdUsuario}`}
+                    href={`/eliminarusuario/${usuario.IdUsuario}` }
                     className="btn btn-outline-danger"
                     onClick={() => {
-                      if (window.confirm('¿Estás seguro de que deseas eliminar esta sesión?')) {
+                      if (window.confirm('¿Estás seguro de que deseas eliminar este usuario?')) {
                         // Aquí puedes realizar la lógica para eliminar la sesión si es necesario
                       }
                     }}

@@ -1,9 +1,8 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from 'axios';
 import "bootstrap/dist/css/bootstrap.min.css";
 import Adicionar from "../Img/Adicionar.svg";
-import  { useEffect, useState } from "react";
-import axios from 'axios';
 
 export default function Usuarios() {
   const navigate = useNavigate();
@@ -24,31 +23,32 @@ export default function Usuarios() {
   }
 
   const validar = (ev) => {
-    ev.preventDefault(); //evito que el formlario se recargue al dar presionar el button
+    ev.preventDefault(); // Evito que el formulario se recargue al presionar el botón
     navigate("/crearusuarios");
+  };
+
+  const eliminarUsuario = async (idUsuario) => {
+    try {
+      const response = await axios.delete(`http://localhost:8080/usuario/${idUsuario}`);
+      console.log('Usuario eliminado:', response.data);
+      // Actualizar la lista de usuarios después de la eliminación
+      getUsuarios();
+    } catch (error) {
+      console.error('Error al eliminar usuario:', error);
+    }
   };
 
   return (
     <div>
-      {/* <link
-        href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
-        rel="stylesheet"
-        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
-        crossorigin="anonymous"
-      />
-      <link
-        href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
-        rel="stylesheet"
-      /> */}
-      <button class="btn btn-outline-primary mt-4 " onClick={validar}>
-      <img
-                              src={Adicionar}
-                              alt="Gear Icon"
-                              className="icono bg-blue-300 "
-                            />
+      <button className="btn btn-outline-primary mt-4" onClick={validar}>
+        <img
+          src={Adicionar}
+          alt="Gear Icon"
+          className="icono bg-blue-300"
+        />
       </button>
       <div className="table-responsive">
-        <table class="table table-stripped table-hover">
+        <table className="table table-stripped table-hover">
           <thead>
             <tr>
               <th scope="col">Id</th>
@@ -73,26 +73,24 @@ export default function Usuarios() {
                   <a
                     href={`/editarusuario/${usuario.IdUsuario}`}
                     className="btn btn-outline-success"
-                    
                   >
                     Editar
                   </a>
-                  <a
-                    href={`/eliminarusuario/${usuario.IdUsuario}` }
+                  <button
                     className="btn btn-outline-danger"
                     onClick={() => {
                       if (window.confirm('¿Estás seguro de que deseas eliminar este usuario?')) {
-                        // Aquí puedes realizar la lógica para eliminar la sesión si es necesario
+                        eliminarUsuario(usuario.IdUsuario);
+                        window.location.reload(); // Recargar la página después de eliminar
                       }
                     }}
                   >
                     Eliminar
-                  </a>
+                  </button>
                 </td>
               </tr>
             ))}
           </tbody>
-
         </table>
       </div>
     </div>

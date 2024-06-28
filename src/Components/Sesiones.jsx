@@ -27,6 +27,13 @@ export default function Sesiones() {
     navigate("/crearsesiones");
   };
 
+  // Función para formatear la fecha
+  const formatDate = (fecha) => {
+    const date = new Date(fecha);
+    const options = { year: 'numeric', month: 'long', day: 'numeric' };
+    return new Intl.DateTimeFormat('es-ES', options).format(date);
+  };
+
   return (
     <div>
       <h3>Gestión Sesiones</h3>
@@ -53,10 +60,10 @@ export default function Sesiones() {
             {sesiones.map((sesion) => (
               <tr key={sesion.IdSesion}>
                 <td>{sesion.IdSesion}</td>
-                <td>{sesion.IdCurso}</td>
-                <td>{sesion.IdComponente}</td>
+                <td>{sesion.IdCurso} - {sesion.NombreCurso}</td>
+                <td>{sesion.NombreComponente}</td>
                 <td>{sesion.NombreSesion}</td>
-                <td>{sesion.FechaSesion}</td>
+                <td>{formatDate(sesion.FechaSesion)}</td>
                 <td>
                   <a
                     href={`/editarsesion/${sesion.IdSesion}`}

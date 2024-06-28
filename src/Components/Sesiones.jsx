@@ -26,6 +26,17 @@ export default function Sesiones() {
     ev.preventDefault();
     navigate("/crearsesiones");
   };
+  const validarE = (ev) => {
+    ev.preventDefault();
+    navigate("/editarsesion");
+  };
+
+  // Función para formatear la fecha
+  const formatDate = (fecha) => {
+    const date = new Date(fecha);
+    const options = { year: 'numeric', month: 'long', day: 'numeric' };
+    return new Intl.DateTimeFormat('es-ES', options).format(date);
+  };
 
   return (
     <div>
@@ -53,14 +64,15 @@ export default function Sesiones() {
             {sesiones.map((sesion) => (
               <tr key={sesion.IdSesion}>
                 <td>{sesion.IdSesion}</td>
-                <td>{sesion.IdCurso}</td>
-                <td>{sesion.IdComponente}</td>
+                <td>{sesion.IdCurso} - {sesion.NombreCurso}</td>
+                <td>{sesion.NombreComponente}</td>
                 <td>{sesion.NombreSesion}</td>
-                <td>{sesion.FechaSesion}</td>
+                <td>{formatDate(sesion.FechaSesion)}</td>
                 <td>
                   <a
                     href={`/editarsesion/${sesion.IdSesion}`}
                     className="btn btn-outline-success"
+                    onClick={validarE}
                   >
                     Editar
                   </a>

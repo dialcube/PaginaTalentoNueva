@@ -75,7 +75,7 @@ export default function EditarUsuario() {
             </option>
             <option value="E">Estudiante</option>
             <option value="A">Administrador</option>
-            <option value="P">Docente</option>
+            <option value="D">Docente</option>
           </select>{" "}
         </div>
 

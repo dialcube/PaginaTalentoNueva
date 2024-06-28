@@ -7,14 +7,14 @@ import axios from 'axios';
 
 export default function Usuarios() {
   const navigate = useNavigate();
-  const url = 'http://localhost:8080/Usuario/';
+  const url = 'http://localhost:8080/usuario/';
   const [usuarios, setUsuarios] = useState([]);
 
   useEffect(() => {
-    getSesiones();
+    getUsuarios();
   }, []);
 
-  const getSesiones = async () => {
+  const getUsuarios = async () => {
     try {
       const response = await axios.get(url);
       setUsuarios(response.data.results); // Asumo que el formato de respuesta tiene un campo 'results'
@@ -51,7 +51,7 @@ export default function Usuarios() {
           <thead>
             <tr>
               <th scope="col">Id</th>
-              <th scope="col">Cedula</th>
+              <th scope="col">Documento</th>
               <th scope="col">Nombres</th>
               <th scope="col">Apellidos</th>
               <th scope="col">Email</th>

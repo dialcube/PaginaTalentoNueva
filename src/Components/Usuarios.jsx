@@ -24,7 +24,7 @@ export default function Usuarios() {
 
   const validar = (ev) => {
     ev.preventDefault(); // Evito que el formulario se recargue al presionar el botón
-    navigate("/crearusuarios");
+    navigate("../crearusuarios");
   };
 
   const eliminarUsuario = async (idUsuario) => {
@@ -71,7 +71,7 @@ export default function Usuarios() {
                 <td>{usuario.Rol}</td>
                 <td>
                   <a
-                    href={`/editarusuario/${usuario.IdUsuario}`}
+                    href={`./editarusuario/${usuario.IdUsuario}`}
                     className="btn btn-outline-success"
                   >
                     Editar

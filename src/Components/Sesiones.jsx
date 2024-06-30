@@ -24,11 +24,11 @@ export default function Sesiones() {
 
   const validar = (ev) => {
     ev.preventDefault();
-    navigate("/crearsesiones");
+    navigate("../talentomejorada/crearsesiones");
   };
   const validarE = (ev) => {
     ev.preventDefault();
-    navigate("/editarsesion");
+    navigate("../talentomejorada/editarsesion");
   };
 
   // Función para formatear la fecha
@@ -70,7 +70,7 @@ export default function Sesiones() {
                 <td>{formatDate(sesion.FechaSesion)}</td>
                 <td>
                   <a
-                    href={`/editarsesion/${sesion.IdSesion}`}
+                    href={`./editarsesion/${sesion.IdSesion}`}
                     className="btn btn-outline-success"
                     onClick={validarE}
                   >

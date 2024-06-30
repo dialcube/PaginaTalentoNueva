@@ -1,22 +1,24 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Table, Button } from "react-bootstrap";
+import axios from "axios";
 
 const Calificaciones = () => {
-  const [students, setStudents] = useState([
-    { id: 1, nombre: "Juan", apellido: "Pérez", nota1: 4, nota2: 5, nota3: 6 },
-    {
-      id: 2,
-      nombre: "Ana",
-      apellido: "García",
-      nota1: 3,
-      nota2: 3,
-      nota3: 2.5,
-    },
-    // Agrega más estudiantes aquí
-  ]);
-
+  const [students, setStudents] = useState([]);
   const [editIndex, setEditIndex] = useState(null);
   const [editNotes, setEditNotes] = useState({});
+
+  useEffect(() => {
+    fetchNotasCurso();
+  }, []);
+
+  const fetchNotasCurso = async () => {
+    try {
+      const response = await axios.get("http://localhost:8080/notascurso/");
+      setStudents(response.data.results); // Asumo que el formato de respuesta tiene un campo 'results'
+    } catch (error) {
+      console.error("Error fetching notas curso:", error);
+    }
+  };
 
   const handleEdit = (idx) => {
     setEditIndex(idx);
@@ -29,24 +31,31 @@ const Calificaciones = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setEditNotes({ ...editNotes, [name]: value });
+    //setEditNotes({ ...editNotes, [name]: value });
+    const newValue = Math.min(Math.max(parseFloat(value), 0), 5);
+    setEditNotes({ ...editNotes, [name]: newValue });
   };
 
-  const handleSave = (idx) => {
-    const updatedStudents = [...students];
-    updatedStudents[idx] = {
-      ...updatedStudents[idx],
-      ...editNotes,
-      nota1: parseFloat(editNotes.nota1),
-      nota2: parseFloat(editNotes.nota2),
-      nota3: parseFloat(editNotes.nota3),
-    };
-    setStudents(updatedStudents);
-    setEditIndex(null);
-  };
+  const handleSave = async (idx) => {
+    const studentToUpdate = students[idx];
+    studentToUpdate.nota1 = parseFloat(editNotes.nota1);
+    studentToUpdate.nota2 = parseFloat(editNotes.nota2);
+    studentToUpdate.nota3 = parseFloat(editNotes.nota3);
 
-  const calculateAverage = (nota1, nota2, nota3) => {
-    return ((nota1 + nota2 + nota3) / 3).toFixed(2);
+    try {
+      await axios.put(
+        `http://localhost:8080/notascurso/editar/${studentToUpdate.IdCurso}/${studentToUpdate.IdComponente}/${studentToUpdate.IdUsuario}`,
+        {
+          nota1: studentToUpdate.nota1,
+          nota2: studentToUpdate.nota2,
+          nota3: studentToUpdate.nota3,
+        }
+      );
+      setEditIndex(null);
+      fetchNotasCurso(); // Recargar las notas del curso después de guardar
+    } catch (error) {
+      console.error("Error updating notas curso:", error);
+    }
   };
 
   return (
@@ -55,20 +64,24 @@ const Calificaciones = () => {
       <Table striped bordered hover>
         <thead>
           <tr>
-            <th>Nombre</th>
-            <th>Apellido</th>
+            <th>Nombre Curso</th>
+            <th>Nombre Componente</th>
+            <th>Identificación</th>
+            <th>Nombre Usuario</th>
             <th>Nota 1</th>
             <th>Nota 2</th>
             <th>Nota 3</th>
-            <th>Definitiva</th>
+            <th>Nota Final</th>
             <th>Acciones</th>
           </tr>
         </thead>
         <tbody>
           {students.map((student, idx) => (
-            <tr key={student.id}>
-              <td>{student.nombre}</td>
-              <td>{student.apellido}</td>
+            <tr key={student.IdUsuario}>
+              <td>{student.NombreCurso}</td>
+              <td>{student.NombreComponente}</td>
+              <td>{student.identificacion}</td>
+              <td>{student.NombreUsuario}</td>
               <td>
                 {editIndex === idx ? (
                   <input
@@ -76,6 +89,10 @@ const Calificaciones = () => {
                     name="nota1"
                     value={editNotes.nota1}
                     onChange={handleChange}
+                    autoFocus // Mantener el foco en el input cuando se edita
+                    style={{ width: "50px" }}
+                    min="0"
+                    max="5"
                   />
                 ) : (
                   student.nota1
@@ -88,6 +105,9 @@ const Calificaciones = () => {
                     name="nota2"
                     value={editNotes.nota2}
                     onChange={handleChange}
+                    style={{ width: "50px" }}
+                    min="0"
+                    max="5"
                   />
                 ) : (
                   student.nota2
@@ -100,21 +120,34 @@ const Calificaciones = () => {
                     name="nota3"
                     value={editNotes.nota3}
                     onChange={handleChange}
+                    style={{ width: "50px" }}
+                    min="0"
+                    max="5"
                   />
                 ) : (
                   student.nota3
                 )}
               </td>
-              <td>
-                {calculateAverage(student.nota1, student.nota2, student.nota3)}
-              </td>
+              <td>{student.notafinal}</td>
               <td>
                 {editIndex === idx ? (
-                  <Button variant="success" onClick={() => handleSave(idx)}>
+                  <Button
+                    variant="success"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      handleSave(idx);
+                    }}
+                  >
                     Guardar
                   </Button>
                 ) : (
-                  <Button variant="primary" onClick={() => handleEdit(idx)}>
+                  <Button
+                    variant="primary"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      handleEdit(idx);
+                    }}
+                  >
                     Editar
                   </Button>
                 )}

@@ -88,7 +88,7 @@ export default function AsistenciasSesiones() {
         </tbody>
       </table>
 
-      <a href="/Inicio" class="btn btn-outline-primary">
+      <a href="../talentomejorada/Inicio" class="btn btn-outline-primary">
           Volver
         </a>
  

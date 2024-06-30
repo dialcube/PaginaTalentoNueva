@@ -78,7 +78,7 @@ export default function EditarUsuario() {
 
       // Mostrar mensaje de éxito o redirigir a otra página
       alert('Usuario actualizado exitosamente!');
-      navigate("/usuarios");
+      navigate("../talentomejorada/usuarios");
     } catch (error) {
       console.error('Error al actualizar usuario:', error);
       // Mostrar mensaje de error al usuario
@@ -189,7 +189,7 @@ export default function EditarUsuario() {
           Guardar
         </button>
         {/* Opcional: Cancelar la edición */}
-        <a href="/usuarios" className="btn btn-outline-danger">
+        <a href="../usuarios" className="btn btn-outline-danger">
           Cancelar
         </a>
       </form>

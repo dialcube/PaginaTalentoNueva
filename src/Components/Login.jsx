@@ -1,25 +1,47 @@
 import React, { useState } from "react";
-import Inicio from "./TalentoMejorada";
+import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { Route, Routes } from "react-router-dom";
 
 export default function Login() {
   const navigate = useNavigate(); // Hook para la navegación
-  
+
   // Estados para almacenar el email y la contraseña
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [isLoggedIn, setIsLoggedIn] = useState(false); 
+  const [Email, setEmail] = useState("");
+  const [Password, setPassword] = useState("");
+  const [isLoggedIn, setIsLoggedIn] = useState(false); // Estado para verificar si el usuario está logueado
 
   // Función para manejar el envío del formulario
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault(); // Previene el comportamiento predeterminado del formulario
 
-    // Validación del inicio de sesión
-    if (email === "talento@talentotech.com" && password === "123") {
-      setIsLoggedIn(true); // Cambia el estado para ocultar el componente
-      navigate("/talentomejorada"); // Redirige al usuario al dashboard después de iniciar sesión
-    } else {
+    try {
+      // Envía una solicitud POST al backend para autenticar al usuario
+      const response = await axios.post("http://localhost:8080/login", {
+        Email,
+        Password,
+      });
+
+      // Verifica la respuesta del backend
+      if (response.status === 200) {
+        const { IdUsuario, Email, Nombres, Rol } = response.data.data;
+
+        // Almacenar los datos en sessionStorage
+        sessionStorage.setItem("IdUsuario", IdUsuario);
+        sessionStorage.setItem("Email", Email);
+        sessionStorage.setItem("Nombres", Nombres);
+        sessionStorage.setItem("Rol", Rol);
+
+        // Si el inicio de sesión es exitoso, actualiza el estado para ocultar el componente Login
+        setIsLoggedIn(true);
+        // Redirige al usuario
+        navigate("/talentomejorada");
+      } else {
+        // Si el backend devuelve un estado diferente, muestra un mensaje de error
+        alert("El usuario o la contraseña son incorrectos");
+      }
+    } catch (error) {
+      console.error("Error al iniciar sesión:", error);
+      // alert("Error al iniciar sesión. Por favor, intenta nuevamente.");
       alert("El usuario o la contraseña son incorrectos");
     }
   };
@@ -27,15 +49,16 @@ export default function Login() {
   if (isLoggedIn) {
     return null; // No renderiza nada si el usuario está logueado
   }
+
   return (
     <div className="bg-gradient-to-r from-violet-400 to-purple-300 to-violet-600 min-h-screen flex justify-center items-center">
       <form className="form bg-white p-8 rounded-lg" onSubmit={handleSubmit}>
-        <h2 className="text-center mb-4">Please login</h2>
+        <h2 className="text-center mb-4">Inicio Sesion</h2>
         <input
           type="text"
-          name="userName"
-          placeholder="Email Address"
-          value={email}
+          name="Email"
+          placeholder="Ingrese Email"
+          value={Email}
           onChange={(event) => setEmail(event.target.value)}
           required
           autoFocus
@@ -43,9 +66,9 @@ export default function Login() {
         />
         <input
           type="password"
-          name="password"
+          name="Password"
           placeholder="Password"
-          value={password}
+          value={Password}
           onChange={(event) => setPassword(event.target.value)}
           required
           className="block w-full h-12 px-2 mb-4 rounded border border-gray-300 focus:outline-none focus:border-blue-400"
@@ -58,16 +81,15 @@ export default function Login() {
             name="rememberMe"
             className="h-4 w-4 mr-2"
           />{" "}
-          Remember me
+          Recordarme
         </label>
         <button
           className="button bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
           type="submit"
         >
-          Login
+          Iniciar Sesion
         </button>
       </form>
-    
     </div>
   );
 }

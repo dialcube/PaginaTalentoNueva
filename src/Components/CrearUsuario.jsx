@@ -48,7 +48,7 @@ export default function CrearUsuario() {
 
       // Mostrar mensaje de éxito o redirigir a otra página
       alert('Usuario creado exitosamente!');
-	    navigate("/usuarios");
+	    navigate("../talentomejorada/usuarios");
     } catch (error) {
       console.error('Error al crear usuario:', error);
       // Mostrar mensaje de error al usuario
@@ -158,6 +158,9 @@ export default function CrearUsuario() {
         <button type="submit" className="btn btn-primary">
           Guardar
         </button>
+        <a href="talentomejorada/usuarios" className="btn btn-outline-danger">
+          Cancelar
+        </a>
         {/* Opcional: Cancelar la creación */}
         {/* <a href="/usuarios" className="btn btn-outline-danger">
           Cancelar

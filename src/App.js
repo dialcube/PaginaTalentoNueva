@@ -1,31 +1,25 @@
 import React from "react";
-import "bootstrap/dist/css/bootstrap.min.css";
-
-import TalentoMejorada from "./Components/TalentoMejorada";
-import Sesiones from "./Components/Sesiones";
-import { BrowserRouter as Router,  Routes,Route } from "react-router-dom";
-
-import './Components/TalentoMejorada.css';
-import CrearSesion from "./Components/CrearSesion";
-import Calificaciones from "./Components/Calificaciones";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Login from "./Components/Login";
+import TalentoMejorada from "./Components/TalentoMejorada";
+import Inicio from "./Components/Inicio";
+import  { useEffect } from "react";
+
 
 function App() {
+  useEffect(() => {
+    sessionStorage.clear();
+  }, []);
   return (
-    <div className="App">
-      
-      <Router>
-        {/* <Login /> */}
-         <TalentoMejorada />
-     
-        <Routes>
-          
-          {/* <Route path="/crearusuarios" element={<CrearUsuario />} /> */}
-          {/* <Route path="/talentomejorada" element={<TalentoMejorada />} /> */}
+    <Router>
+      <Routes>
+        <Route path="/login" element={<Login />} />
+        <Route path="/talentomejorada/*" element={<TalentoMejorada />} />
+        <Route path="/talentomejorada/inicio" element={<Inicio />} />
 
-        </Routes>
-      </Router>
-    </div>
+        <Route path="*" element={<Login />} /> {/* Ruta por defecto */}
+      </Routes>
+    </Router>
   );
 }
 

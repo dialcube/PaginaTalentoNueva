@@ -10,6 +10,8 @@ import {
   ProgressBar,
   Carousel,
 } from "react-bootstrap";
+import "./TalentoMejorada.css";
+
 
 import { InputGroup, FormControl } from "react-bootstrap";
 import { FaSearch } from "react-icons/fa";
@@ -39,7 +41,7 @@ export default function Inicio() {
   const navigate = useNavigate();
   const validar = (ev) => {
     ev.preventDefault(); //evito que el formlario se recargue al dar presionar el button
-    navigate("/asistenciassesiones");
+    navigate("../talentomejorada/asistenciassesiones");
   };
   return (
     <div>
@@ -176,7 +178,7 @@ export default function Inicio() {
                             variant={estadoButtonVariant}
                             size="sm"
                             className="oval-button"
-                          >
+                                                      >
                             {sesion.Estado}
                           </Button>
                         </div>

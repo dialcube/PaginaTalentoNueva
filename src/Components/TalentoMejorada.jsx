@@ -7,6 +7,7 @@ import Boot from "../Img/Boot.svg";
 import Hacka from "../Img/Hacka.svg";
 import Job from "../Img/Job.svg";
 import Usuario from "../Img/User.svg";
+import UsuarioCurso from "../Img/UsuarioCurso.svg";
 
 import Market from "../Img/Market.svg";
 import Preguntas from "../Img/Preguntas.svg";
@@ -14,7 +15,7 @@ import Manual from "../Img/Manual.svg";
 //import FW from "../Img/FotoWH.jpg";
 import GUsuarios from "../Img/GUsuarios.svg";
 import GBootcamp from "../Img/GBootcamp.svg";
-import { useNavigate} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Route, Routes, Navigate } from "react-router-dom";
 import Inicio from "./Inicio";
 import Usuarios from "./Usuarios";
@@ -26,6 +27,8 @@ import CrearSesion from "./CrearSesion";
 import EditarSesion from "./EditarSesion";
 import Calificaciones from "./Calificaciones";
 import Califica from "../Img/Califica.svg";
+import UsuarioCursos from "./UsuarioCursos";
+import CrearUsuarioCursos from "./CrearUsuarioCursos";
 
 const NavItem = ({ name, path, icon }) => {
   let navigate = useNavigate();
@@ -66,15 +69,14 @@ export default function TalentoMejorada() {
   const cnombres = sessionStorage.getItem("Nombres");
   const crol = sessionStorage.getItem("Rol");
   let drol;
-  if (crol === "A"){
+  if (crol === "A") {
     drol = "Administrador";
-  }else if (crol === "E"){
+  } else if (crol === "E") {
     drol = "Estudiante";
-  }else{
-    drol = "Docente"
+  } else {
+    drol = "Docente";
   }
   return (
-
     <div>
       <Container style={{ maxWidth: "1500px" }}>
         <Row>
@@ -82,21 +84,16 @@ export default function TalentoMejorada() {
           <Col sm={3} className="bg-gradient-to-r from-fuchsia-50 border">
             <div className="flex items-center space-x-4 p-4 bg-white mt-1 rounded-lg brightness-120 hover:skew-y-12 shadow-sm opacity-90">
               <img
-                src=   {Usuario}
+                src={Usuario}
                 alt=""
                 className="w-16 h-16 rounded-full border border-gray-300 shadow-sm object-cover "
               />
               <div>
                 <div className="text-lg font-bold text-blue-600">
-                {cnombres}
+                  {cnombres}
                 </div>
-                <div className="text-sm text-gray-400 italic">
-                {cemail}
-                </div>
-                <div className="text-sm text-gray-400 italic">
-                {drol}
-
-                </div>
+                <div className="text-sm text-gray-400 italic">{cemail}</div>
+                <div className="text-sm text-gray-400 italic">{drol}</div>
               </div>
             </div>
             <Row>
@@ -112,7 +109,11 @@ export default function TalentoMejorada() {
                     <Navbar.Toggle aria-controls="basic-navbar-nav"></Navbar.Toggle>
                     <Navbar.Collapse>
                       <Nav class="flex-column" justify-content-start>
-                        <NavItem name="Inicio" path="talentomejorada/inicio" icon={Inicios} />
+                        <NavItem
+                          name="Inicio"
+                          path="talentomejorada/inicio"
+                          icon={Inicios}
+                        />
                         <Nav.Link href="#">
                           <div className="nav-item">
                             <img
@@ -192,6 +193,11 @@ export default function TalentoMejorada() {
                           path="talentomejorada/usuarios"
                           icon={GUsuarios}
                         />
+                         <NavItem
+                          name="Usuario Curso"
+                          path="talentomejorada/usuariocursos"
+                          icon={UsuarioCurso}
+                        />
 
                         <NavItem
                           name="Sesiones Bootcamps"
@@ -208,7 +214,7 @@ export default function TalentoMejorada() {
                   </Container>
                 </Navbar>
 
-                <div style={{ height: "160px" }}></div>
+                <div style={{ height: "100px" }}></div>
                 <div className="container mx-auto p-4">
                   <button className="button-close" onClick={handleLogout}>
                     <div className="nav-item">
@@ -263,10 +269,7 @@ export default function TalentoMejorada() {
                     path="/talentomejorada/usuarios"
                     element={<Usuarios />}
                   />
-                  <Route
-                    path="/crearusuarios"
-                    element={<CrearUsuario />}
-                  />
+                  <Route path="/crearusuarios" element={<CrearUsuario />} />
                   <Route
                     path="/talentomejorada/editarusuario/:id"
                     element={<EditarUsuario />}
@@ -291,6 +294,12 @@ export default function TalentoMejorada() {
                     path="/talentomejorada/calificaciones"
                     element={<Calificaciones />}
                   />
+
+                  <Route
+                    path="/talentomejorada/usuariocursos"
+                    element={<UsuarioCursos />}
+                  />
+                  <Route path="/crearusuariocursos" element={<CrearUsuarioCursos />} />
                 </Routes>
               </div>
             </Row>

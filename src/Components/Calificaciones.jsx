@@ -24,18 +24,7 @@ const Calificaciones = () => {
   }, [fetchNotasCurso]);
 
 
-  // useEffect(() => {
-  //   fetchNotasCurso();
-  // }, []);
-
-  // const fetchNotasCurso = async () => {
-  //   try {
-  //     const response = await axios.get("http://localhost:8080/notascurso/");
-  //     setStudents(response.data.results); // Asumo que el formato de respuesta tiene un campo 'results'
-  //   } catch (error) {
-  //     console.error("Error fetching notas curso:", error);
-  //   }
-  // };
+  
 
   const handleEdit = (idx) => {
     setEditIndex(idx);

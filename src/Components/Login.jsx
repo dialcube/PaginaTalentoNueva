@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import backgroundImage from "../Img/TalentoInicio.png"; // Importa la imagen de fondo
 
 export default function Login() {
   const navigate = useNavigate(); // Hook para la navegación
@@ -51,8 +52,23 @@ export default function Login() {
   }
 
   return (
-    <div className="bg-gradient-to-r from-violet-400 to-purple-300 to-violet-600 min-h-screen flex justify-center items-center">
-      <form className="form bg-white p-8 rounded-lg" onSubmit={handleSubmit}>
+    <div
+      style={{
+        backgroundImage: `url(${backgroundImage})`, // Establece la imagen de fondo
+        backgroundSize: "cover", // Ajusta el tamaño para cubrir el contenedor
+        backgroundRepeat: "no-repeat", // Evita que se repita la imagen
+        backgroundPosition: "center", // Centra la imagen
+        minHeight: "100vh", // Asegura que ocupe toda la altura de la pantalla
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+      }}
+    >
+      <form
+        className="form bg-white p-8 rounded-lg"
+        onSubmit={handleSubmit}
+        style={{ backgroundColor: "rgba(255, 255, 255, 0.8)" }} // Fondo con transparencia
+      >
         <h2 className="text-center mb-4">Inicio Sesion</h2>
         <input
           type="text"

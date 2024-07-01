@@ -13,6 +13,7 @@ export default function CrearUsuario() {
   const [email, setEmail] = useState('');
   const [rol, setRol] = useState('');
 
+
   const handleSubmit = async (event) => {
     event.preventDefault();
 
@@ -33,7 +34,8 @@ export default function CrearUsuario() {
         Nombres: nombres,
         Apellidos: apellidos,
         Email: email,
-        Rol: rol
+        Rol: rol,
+        Password:identificacion
       });
 
       console.log('Respuesta del servidor:', response.data);

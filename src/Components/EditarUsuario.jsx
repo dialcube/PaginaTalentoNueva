@@ -1,18 +1,20 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import axios from 'axios';
+import axios from "axios";
 
 export default function EditarUsuario() {
   const navigate = useNavigate();
   const { id } = useParams(); // Obtener el ID del usuario de los parámetros de la URL
   const url = `http://localhost:8080/usuario/editar/${id}`;
 
-  const [tipoDocumento, setTipoDocumento] = useState('');
-  const [identificacion, setIdentificacion] = useState('');
-  const [nombres, setNombres] = useState('');
-  const [apellidos, setApellidos] = useState('');
-  const [email, setEmail] = useState('');
-  const [rol, setRol] = useState('');
+  const [tipoDocumento, setTipoDocumento] = useState("");
+  const [identificacion, setIdentificacion] = useState("");
+  const [nombres, setNombres] = useState("");
+  const [apellidos, setApellidos] = useState("");
+  const [email, setEmail] = useState("");
+  const [rol, setRol] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState(""); // Estado para la confirmación de la contraseña
 
   // Cargar los datos del usuario al montar el componente
   useEffect(() => {
@@ -26,8 +28,10 @@ export default function EditarUsuario() {
         setApellidos(userData.Apellidos);
         setEmail(userData.Email);
         setRol(userData.Rol); // Configurar el estado 'rol' con el valor correcto del usuario
+        setPassword(userData.Password);
+        setConfirmPassword(userData.Password); // Inicializar confirmPassword con el mismo valor de password
       } catch (error) {
-        console.error('Error al obtener los datos del usuario:', error);
+        console.error("Error al obtener los datos del usuario:", error);
       }
     };
 
@@ -48,11 +52,21 @@ export default function EditarUsuario() {
       setEmail(value); // Actualizar el estado del email
     } else if (name === "Rol") {
       setRol(value);
+    } else if (name === "Password") {
+      setPassword(value);
+    } else if (name === "ConfirmPassword") {
+      setConfirmPassword(value); // Actualizar el estado de confirmación de la contraseña
     }
   };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+
+    // Verificar que las contraseñas coincidan
+    if (password !== confirmPassword) {
+      alert("Las contraseñas no coinciden");
+      return;
+    }
 
     try {
       // Convertir identificacion a número (si es necesario)
@@ -60,7 +74,7 @@ export default function EditarUsuario() {
 
       // Validar que identificacionDecimal sea un número válido antes de enviar
       if (isNaN(identificacionDecimal)) {
-        alert('El número de identificación no es válido');
+        alert("El número de identificación no es válido");
         return;
       }
 
@@ -71,18 +85,19 @@ export default function EditarUsuario() {
         Nombres: nombres,
         Apellidos: apellidos,
         Email: email,
-        Rol: rol
+        Rol: rol,
+        Password: password,
       });
 
-      console.log('Respuesta del servidor:', response.data);
+      console.log("Respuesta del servidor:", response.data);
 
       // Mostrar mensaje de éxito o redirigir a otra página
-      alert('Usuario actualizado exitosamente!');
+      alert("Usuario actualizado exitosamente!");
       navigate("../talentomejorada/usuarios");
     } catch (error) {
-      console.error('Error al actualizar usuario:', error);
+      console.error("Error al actualizar usuario:", error);
       // Mostrar mensaje de error al usuario
-      alert('Error al actualizar usuario. Por favor, intenta nuevamente.');
+      alert("Error al actualizar usuario. Por favor, intenta nuevamente.");
     }
   };
 
@@ -183,6 +198,36 @@ export default function EditarUsuario() {
             <option value="A">Administrador</option>
             <option value="D">Docente</option>
           </select>
+        </div>
+
+        <div className="mb-3">
+          <label htmlFor="Password" className="form-label">
+            Password
+          </label>
+          <input
+            type="password"
+            className="form-control"
+            name="Password"
+            id="Password"
+            value={password}
+            onChange={handleChange}
+            placeholder="Ingrese Password"
+          />
+        </div>
+
+        <div className="mb-3">
+          <label htmlFor="ConfirmPassword" className="form-label">
+            Confirmar Password
+          </label>
+          <input
+            type="password"
+            className="form-control"
+            name="ConfirmPassword"
+            id="ConfirmPassword"
+            value={confirmPassword}
+            onChange={handleChange}
+            placeholder="Confirme Password"
+          />
         </div>
 
         <button type="submit" className="btn btn-primary">

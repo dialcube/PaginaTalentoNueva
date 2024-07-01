@@ -4,7 +4,9 @@ import axios from 'axios';
 
 export default function CrearUsuario() {
   const navigate = useNavigate();
-  const url = 'http://localhost:8080/usuario/crear';
+  // const url = 'http://localhost:8080/usuario/crear';
+  const url = process.env.REACT_APP_API_BACK + "/usuario/crear";
+
 
   const [tipoDocumento, setTipoDocumento] = useState('');
   const [identificacion, setIdentificacion] = useState(''); // Estado inicial como string

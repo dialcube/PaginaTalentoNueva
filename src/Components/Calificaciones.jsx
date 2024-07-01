@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState,useCallback } from "react";
 import { Table, Button } from "react-bootstrap";
 import axios from "axios";
 
@@ -7,18 +7,35 @@ const Calificaciones = () => {
   const [editIndex, setEditIndex] = useState(null);
   const [editNotes, setEditNotes] = useState({});
 
+  const url = process.env.REACT_APP_API_BACK + "/notascurso/";
+
+  // useEffect para llamar a getSesiones cuando el componente se monta
+  const fetchNotasCurso = useCallback(async () => {
+    try {
+      const response = await axios.get(url);
+      setStudents(response.data.results); // Asumo que el formato de respuesta tiene un campo 'results'
+} catch (error) {
+      console.error("Error fetching usuarios:", error);
+    }
+  }, [url]);
+
   useEffect(() => {
     fetchNotasCurso();
-  }, []);
+  }, [fetchNotasCurso]);
 
-  const fetchNotasCurso = async () => {
-    try {
-      const response = await axios.get("http://localhost:8080/notascurso/");
-      setStudents(response.data.results); // Asumo que el formato de respuesta tiene un campo 'results'
-    } catch (error) {
-      console.error("Error fetching notas curso:", error);
-    }
-  };
+
+  // useEffect(() => {
+  //   fetchNotasCurso();
+  // }, []);
+
+  // const fetchNotasCurso = async () => {
+  //   try {
+  //     const response = await axios.get("http://localhost:8080/notascurso/");
+  //     setStudents(response.data.results); // Asumo que el formato de respuesta tiene un campo 'results'
+  //   } catch (error) {
+  //     console.error("Error fetching notas curso:", error);
+  //   }
+  // };
 
   const handleEdit = (idx) => {
     setEditIndex(idx);
@@ -44,7 +61,7 @@ const Calificaciones = () => {
 
     try {
       await axios.put(
-        `http://localhost:8080/notascurso/editar/${studentToUpdate.IdCurso}/${studentToUpdate.IdComponente}/${studentToUpdate.IdUsuario}`,
+        `${process.env.REACT_APP_API_BACK}/notascurso/editar/${studentToUpdate.IdCurso}/${studentToUpdate.IdComponente}/${studentToUpdate.IdUsuario}`,
         {
           nota1: studentToUpdate.nota1,
           nota2: studentToUpdate.nota2,

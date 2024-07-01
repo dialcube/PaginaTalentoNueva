@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState ,useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from 'axios';
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -6,21 +6,24 @@ import Adicionar from "../Img/Adicionar.svg";
 
 export default function Usuarios() {
   const navigate = useNavigate();
-  const url = 'http://localhost:8080/usuario/';
+  // const url = 'http://localhost:8080/usuario/';
   const [usuarios, setUsuarios] = useState([]);
+  const url = process.env.REACT_APP_API_BACK + "/usuario/";
+
+  // useEffect para llamar a getSesiones cuando el componente se monta
+  const getUsuarios = useCallback(async () => {
+    try {
+      const response = await axios.get(url);
+      setUsuarios(response.data.results);
+    } catch (error) {
+      console.error("Error fetching usuarios:", error);
+    }
+  }, [url]);
 
   useEffect(() => {
     getUsuarios();
-  }, []);
+  }, [getUsuarios]);
 
-  const getUsuarios = async () => {
-    try {
-      const response = await axios.get(url);
-      setUsuarios(response.data.results); // Asumo que el formato de respuesta tiene un campo 'results'
-    } catch (error) {
-      console.error('Error fetching Usuarios:', error);
-    }
-  }
 
   const validar = (ev) => {
     ev.preventDefault(); // Evito que el formulario se recargue al presionar el botón
@@ -29,7 +32,12 @@ export default function Usuarios() {
 
   const eliminarUsuario = async (idUsuario) => {
     try {
-      const response = await axios.delete(`http://localhost:8080/usuario/${idUsuario}`);
+      // const response = await axios.delete(`http://localhost:8080/usuario/${idUsuario}`);
+      const urle = `${process.env.REACT_APP_API_BACK}/usuario/${idUsuario}`;
+
+      const response = await axios.delete(urle);
+
+
       console.log('Usuario eliminado:', response.data);
       // Actualizar la lista de usuarios después de la eliminación
       getUsuarios();

@@ -194,7 +194,7 @@ export default function TalentoMejorada() {
                           icon={GUsuarios}
                         />
                          <NavItem
-                          name="Usuario Curso"
+                          name="Curso Estudiante"
                           path="talentomejorada/usuariocursos"
                           icon={UsuarioCurso}
                         />

@@ -17,7 +17,9 @@ export default function Login() {
 
     try {
       // Envía una solicitud POST al backend para autenticar al usuario
-      const response = await axios.post("http://localhost:8080/login", {
+      const url = process.env.REACT_APP_API_BACK + "/login/";
+
+      const response = await axios.post(url, {
         Email,
         Password,
       });

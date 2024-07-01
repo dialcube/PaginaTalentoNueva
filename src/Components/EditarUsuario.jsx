@@ -5,7 +5,9 @@ import axios from "axios";
 export default function EditarUsuario() {
   const navigate = useNavigate();
   const { id } = useParams(); // Obtener el ID del usuario de los parámetros de la URL
-  const url = `http://localhost:8080/usuario/editar/${id}`;
+  // const url = `http://localhost:8080/usuario/editar/${id}`;
+  const url = `${process.env.REACT_APP_API_BACK}/usuario/editar/${id}}`;
+
 
   const [tipoDocumento, setTipoDocumento] = useState("");
   const [identificacion, setIdentificacion] = useState("");

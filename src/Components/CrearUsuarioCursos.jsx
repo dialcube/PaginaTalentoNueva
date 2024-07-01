@@ -1,12 +1,13 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect,useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from 'axios';
 
 export default function CrearUsuarioCursos() {
   const navigate = useNavigate();
-  const urlCrearUsuarioCurso = 'http://localhost:8080/usuariocursos/crear';
-  const urlCursos = 'http://localhost:8080/curso'; // Endpoint para obtener cursos
-  const urlUsuarios = 'http://localhost:8080/usuario'; // Endpoint para obtener usuarios
+  const urlCrearUsuarioCurso = `${process.env.REACT_APP_API_BACK}/usuariocursos/crear`;
+  const urlCursos = `${process.env.REACT_APP_API_BACK}/curso`; // Endpoint para obtener cursos
+  const urlUsuarios = `${process.env.REACT_APP_API_BACK}/usuario`; // Endpoint para obtener usuarios
+
 
   const [cursos, setCursos] = useState([]);
   const [usuarios, setUsuarios] = useState([]);
@@ -14,33 +15,37 @@ export default function CrearUsuarioCursos() {
   const [idusuario, setIdUsuario] = useState('');
   const [activo, setActivo] = useState('');
 
-  useEffect(() => {
-    getUsuarios();
-  }, []);
-
-  const getUsuarios = async () => {
+  const getUsuarios = useCallback(async () => {
     try {
       const response = await axios.get(urlUsuarios);
-      // Filtrar usuarios por rol 'E' en el frontend
       const usuariosFiltrados = response.data.results.filter(Usuarios => Usuarios.Rol === 'E');
-      setUsuarios(usuariosFiltrados);
+       setUsuarios(usuariosFiltrados);
+
+      setUsuarios(response.data.results);
     } catch (error) {
-      console.error('Error fetching Usuarios:', error);
+      console.error("Error fetching usuarios:", error);
     }
-  };
+  }, [urlUsuarios]);
+
+  useEffect(() => {
+    getUsuarios();
+  }, [getUsuarios]);
+
+
+  const getCursos = useCallback(async () => {
+    try {
+      const response = await axios.get(urlCursos);
+
+      setCursos(response.data.results);
+    } catch (error) {
+      console.error("Error fetching usuarios:", error);
+    }
+  }, [urlCursos]);
 
   useEffect(() => {
     getCursos();
-  }, []);
+  }, [getCursos]);
 
-  const getCursos = async () => {
-    try {
-      const response = await axios.get(urlCursos);
-      setCursos(response.data.results); // Asumo que el formato de respuesta tiene un campo 'results'
-    } catch (error) {
-      console.error('Error fetching Usuarios:', error);
-    }
-  }
 
 
   const handleSubmit = async (event) => {
@@ -70,7 +75,7 @@ export default function CrearUsuarioCursos() {
 
   return (
     <div>
-      <h2>Creación de Usuario</h2>
+      <h2>Asignacion Curso a Estudiante</h2>
       <form onSubmit={handleSubmit}>
         <div className="mb-3">
           <label htmlFor="IdCurso" className="form-label">

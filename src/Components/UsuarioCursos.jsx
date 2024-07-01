@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState,useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -6,21 +6,24 @@ import Adicionar from "../Img/Adicionar.svg";
 
 export default function UsuarioCursos() {
   const navigate = useNavigate();
-  const url = "http://localhost:8080/usuariocursos/";
+  // const url = "http://localhost:8080/usuariocursos/";
   const [usuarios, setUsuarioCursos] = useState([]);
+
+  const url = process.env.REACT_APP_API_BACK + "/usuariocursos/";
+
+  // useEffect para llamar a getSesiones cuando el componente se monta
+  const getUsuarioCursos = useCallback(async () => {
+    try {
+      const response = await axios.get(url);
+      setUsuarioCursos(response.data.results);
+    } catch (error) {
+      console.error("Error fetching usuarios:", error);
+    }
+  }, [url]);
 
   useEffect(() => {
     getUsuarioCursos();
-  }, []);
-
-  const getUsuarioCursos = async () => {
-    try {
-      const response = await axios.get(url);
-      setUsuarioCursos(response.data.results); // Asumo que el formato de respuesta tiene un campo 'results'
-    } catch (error) {
-      console.error("Error fetching Usuario Cursos:", error);
-    }
-  };
+  }, [getUsuarioCursos]);
 
   const validar = (ev) => {
     ev.preventDefault(); // Evito que el formulario se recargue al presionar el botón
@@ -29,6 +32,7 @@ export default function UsuarioCursos() {
 
   return (
     <div>
+      <h2> Curso Estudiante</h2>
       <button className="btn btn-outline-primary mt-4" onClick={validar}>
         <img src={Adicionar} alt="Gear Icon" className="icono bg-blue-300" />
       </button>

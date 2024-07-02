@@ -1,371 +1,273 @@
-import React from 'react'
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 import {
-    
-    Row,
-    Col,
-    Image,
-    Accordion,
-    Button,
-    ListGroup, 
-    ProgressBar,
-    Carousel,
-  } from "react-bootstrap";
-
-  import { InputGroup, FormControl } from "react-bootstrap";
-  import { FaSearch } from "react-icons/fa";
-  import Recurso from "../Img/Recursos.svg";
-  import NBoletin from "../Img/NBoletin.png";
+  Row,
+  Col,
+  Image,
+  Accordion,
+  Button,
+  ListGroup,
+  ProgressBar,
+  Carousel,
+  InputGroup,
+  FormControl
+} from "react-bootstrap";
+import { FaSearch } from "react-icons/fa";
+import Recurso from "../Img/Recursos.svg";
+import NBoletin from "../Img/NBoletin.png";
 import NLogros from "../Img/NLogros.png";
 import NRecuerda from "../Img/NRecuerda.png";
 import { useNavigate } from "react-router-dom";
-
+import "./TalentoMejorada.css";
 
 export default function Inicio() {
+  // Asegúrate de que la URL esté bien definida
+  const url = process.env.REACT_APP_API_BACK + "/sesiones/";
+
+  const [sesiones, setSesiones] = useState([]);
+
+  // useEffect para llamar a getSesiones cuando el componente se monta
+  useEffect(() => {
+    const getSesiones = async () => {
+      try {
+        const response = await axios.get(url);
+        setSesiones(response.data.results);
+      } catch (error) {
+        console.error("Error fetching sesiones:", error);
+      }
+    };
+
+    getSesiones();
+  }, [url]); // Incluye `url` como dependencia
+
   const navigate = useNavigate();
+
+  // Función para manejar la navegación
   const validar = (ev) => {
-    ev.preventDefault(); //evito que el formlario se recargue al dar presionar el button
-    navigate("/asistenciassesiones");
+    ev.preventDefault(); // Evitar que el formulario se recargue al presionar el botón
+    navigate("../talentomejorada/asistenciassesiones");
   };
+
   return (
     <div>
-                 <Col>
-                  <br />
-                  <h2 className="text-blue-600/100 text-center">
-                    Desarrollo Web Full Stack{" "}
-                  </h2>
+      <Col>
+        <br />
+        <h2 className="text-blue-600/100 text-center">Desarrollo Web Full Stack</h2>
 
-                  <InputGroup
-                    className="mb-3"
-                    style={{ maxWidth: "400px", maxHeight: "20px" }}
+        <InputGroup className="mb-3" style={{ maxWidth: "400px", maxHeight: "20px" }}>
+          <FormControl
+            placeholder="Search"
+            aria-label="Search"
+            aria-describedby="basic-addon2"
+          />
+          <br />
+          <Button variant="outline-secondary" id="button-addon2">
+            <FaSearch />
+          </Button>
+        </InputGroup>
+
+        <strong>Desarrollo del bootcamp:</strong>
+        <br />
+        <Row>
+          <Col
+            sm={12}
+            md="10"
+            lg="8"
+            style={{ maxHeight: "500px", overflowY: "auto" }}
+            className="bg-gradient-to-r from-fuchsia-50"
+          >
+            <ProgressBar
+              striped
+              variant="primary"
+              now={70}
+              label={`${70}%`}
+              rounded
+            />
+
+            <Accordion flush className="p-3">
+              {sesiones.map((sesion) => {
+                const fecha = new Date(sesion.FechaSesion);
+                const opciones = {
+                  year: "numeric",
+                  month: "long",
+                  day: "numeric",
+                };
+                const fechaFormateada = new Intl.DateTimeFormat("es-ES", opciones).format(fecha);
+
+                let estadoButtonVariant = "";
+                switch (sesion.Estado) {
+                  case "Finalizado":
+                    estadoButtonVariant = "danger";
+                    break;
+                  case "EnCurso":
+                    estadoButtonVariant = "success";
+                    break;
+                  default:
+                    estadoButtonVariant = "warning";
+                    break;
+                }
+
+                return (
+                  <Accordion.Item
+                    key={sesion.IdSesion}
+                    eventKey={sesion.IdSesion}
+                    className="item-acordeon"
                   >
-                    <FormControl
-                      placeholder="Search"
-                      aria-label="Search"
-                      aria-describedby="basic-addon2"
-                    />
-                    <br />
-                    <Button variant="outline-secondary" id="button-addon2">
-                      <FaSearch />
-                    </Button>
-                  </InputGroup>
-
-                  <strong>Desarrollo del bootcamp:</strong>
-                  <br />
-                  <Row>
-                    <Col
-                      sm={12}
-                      md="10"
-                      lg="8"
-                      // xl={500}
-                      style={{ maxHeight: "500px", overflowY: "auto" }}
-                      className="bg-gradient-to-r from-fuchsia-50"
-                    >
-                      <ProgressBar
-                        striped
-                        variant="primary"
-                        now={70}
-                        label={`${70}%`}
-                        rounded
-                      />
-                      {/* col1 contenido */}
-                      <Accordion flush className="p-3">
-                        <Accordion.Item eventKey="0" className="item-acordeon">
-                          <Accordion.Header>
-                            <div className="d-flex justify-content-between align-items-center w-100">
-                              <div>
-                                <span>
-                                  <strong>Sesion 1</strong> Introduccion a React
-                                </span>
-                                <br />
-                                <span>Jueves 30 de Mayo, 2024</span>
-                              </div>
-                              <div>
-                                <Button
-                                  variant="danger"
-                                  size="sm"
-                                  className="oval-button"
-                                >
-                                  Finalizado
-                                </Button>
-                              </div>
-                            </div>
-                          </Accordion.Header>
-                          <Accordion.Body>
-                            Horario: jueves, 30 de Mayo de 2024 a las 5:55 AM
-                            <br />
-                            Asistencia: Asistencia Marcada
-                            <br />
-                            Descripcion: Descripcion de la Sesion 1
-                            <br />
-                            <Button variant="primary" size="sm" rounded  className="me-2">
-                              Ingresar a la grabación
-                            </Button>
-                            <Button variant="primary" size="sm" rounded onClick={validar} >
-                              Ver asistentes
-                            </Button>
-                          </Accordion.Body>
-                        </Accordion.Item>
-
-                        <Accordion.Item eventKey="1" className="item-acordeon">
-                          <Accordion.Header>
-                            <div className="d-flex justify-content-between align-items-center w-100">
-                              <div>
-                                <span>
-                                  <strong>Sesion 2</strong> Componentes en React
-                                </span>
-                                <br />
-                                <span>Viernes 31 de Mayo, 2024</span>
-                              </div>
-                              <div>
-                                <Button
-                                  variant="danger"
-                                  size="sm"
-                                  className="oval-button"
-                                >
-                                  Finalizado
-                                </Button>
-                              </div>
-                            </div>
-                          </Accordion.Header>
-                          <Accordion.Body>
-                            Horario:
-                            <br />
-                            Asistencia:
-                            <br />
-                            Descripcion::
-                          </Accordion.Body>
-                        </Accordion.Item>
-
-                        <Accordion.Item eventKey="2" className="item-acordeon">
-                          <Accordion.Header>
-                            <div className="d-flex justify-content-between align-items-center w-100">
-                              <div>
-                                <span>
-                                  <strong>Sesion 3</strong> Responsive
-                                </span>
-                                <br />
-                                <span>Sabado 1 de Junio, 2024</span>
-                              </div>
-                              <div>
-                                <Button
-                                  variant="danger"
-                                  size="sm"
-                                  className="oval-button"
-                                >
-                                  Finalizado
-                                </Button>
-                              </div>
-                            </div>
-                          </Accordion.Header>
-                          <Accordion.Body>
-                            Horario:
-                            <br />
-                            Asistencia:
-                            <br />
-                            Descripcion:
-                          </Accordion.Body>
-                        </Accordion.Item>
-                        <Accordion.Item eventKey="3" className="item-acordeon">
-                          <Accordion.Header>
-                            <div className="d-flex justify-content-between align-items-center w-100">
-                              <div>
-                                <span>
-                                  <strong>Sesion 4</strong> Bootstrap
-                                </span>
-                                <br />
-                                <span>Lunes 3 de Junio, 2024</span>
-                              </div>
-                              <div>
-                                <Button
-                                  variant="danger"
-                                  size="sm"
-                                  className="oval-button"
-                                >
-                                  Finalizado
-                                </Button>
-                              </div>
-                            </div>
-                          </Accordion.Header>
-                          <Accordion.Body>
-                            Horario:
-                            <br />
-                            Asistencia:
-                            <br />
-                            Descripcion:
-                          </Accordion.Body>
-                        </Accordion.Item>
-                        <Accordion.Item eventKey="4" className="item-acordeon">
-                          <Accordion.Header>
-                            <div className="d-flex justify-content-between align-items-center w-100">
-                              <div>
-                                <span>
-                                  <strong>Sesion 5</strong> TailWind
-                                </span>
-                                <br />
-                                <span>Martes 4 de Junio, 2024</span>
-                              </div>
-                              <div>
-                                <Button
-                                  variant="success"
-                                  size="sm"
-                                  className="oval-button"
-                                >
-                                  EnCurso
-                                </Button>
-                              </div>
-                            </div>
-                          </Accordion.Header>
-                          <Accordion.Body>
-                            Horario: martes, 4 de Junio de 2024 a las 5:55 AM
-                            <br />
-                            Asistencia: Asistencia no marcada
-                            <br />
-                            Descripcion: Descripcion de la sesion 5
-                            <br />
-                            <Button variant="primary" size="sm" rounded>
-                              Ingresar a la sesión
-                            </Button>
-                          </Accordion.Body>
-                        </Accordion.Item>
-                        <Accordion.Item eventKey="5" className="item-acordeon">
-                          <Accordion.Header>
-                            <div className="d-flex justify-content-between align-items-center w-100">
-                              <div>
-                                <span>
-                                  <strong>Sesion 6</strong> MongoDB
-                                </span>
-                                <br />
-                                <span>Miercoles 5 de Junio, 2024</span>
-                              </div>
-                              <div>
-                                <Button
-                                  variant="warning"
-                                  size="sm"
-                                  className="oval-button"
-                                >
-                                  Proximamente
-                                </Button>
-                              </div>
-                            </div>
-                          </Accordion.Header>
-                          <Accordion.Body>
-                            Horario:
-                            <br />
-                            Asistencia:
-                            <br />
-                            Descripcion:
-                          </Accordion.Body>
-                        </Accordion.Item>
-                      </Accordion>
-                    </Col>
-                    <Col className="bg-gradient-to-r from-fuchsia-50 border">
-                      <strong>Recursos:</strong>
-                      <ListGroup>
-                        <ListGroup.Item>
-                          <a href="#kit" className="list-group-link  ">
-                            <div className="nav-item">
-                              <img
-                                className="nav-icon"
-                                src={Recurso}
-                                alt=""
-                                width="16"
-                                height="16"
-                              />
-                              {"  "}
-                              <span className="hover-recursos">
-                                Kit del Programador
-                              </span>
-                            </div>
-                          </a>
-                        </ListGroup.Item>
-                        <ListGroup.Item>
-                          <a href="#ct" className="list-group-link">
-                            <div className="nav-item">
-                              <img
-                                className="nav-icon"
-                                src={Recurso}
-                                alt=""
-                                width="16"
-                                height="16"
-                              />
-                              {"  "}
-                              <span className="hover-recursos">
-                                Actividades Estudiantes
-                              </span>
-                            </div>
-                          </a>
-                        </ListGroup.Item>
-                        <ListGroup.Item>
-                          <a href="#mat" className="list-group-link">
-                            <div className="nav-item">
-                              <img
-                                className="nav-icon"
-                                src={Recurso}
-                                alt=""
-                                width="16"
-                                height="16"
-                              />
-                              {"  "}
-                              <span className="hover-recursos">
-                                Material de Clase
-                              </span>
-                            </div>
-                          </a>
-                        </ListGroup.Item>
-                        <ListGroup.Item>
-                          <a href="#con" className="list-group-link">
-                            <div className="nav-item">
-                              <img
-                                className="nav-icon"
-                                src={Recurso}
-                                alt=""
-                                width="16"
-                                height="16"
-                              />
-                              {"  "}
-                              <span className="hover-recursos">
-                                Contenido Tematico
-                              </span>
-                            </div>
-                          </a>
-                        </ListGroup.Item>
-                      </ListGroup>
-                      <br />
-                      <strong>Boletin Informativo:</strong>
-                      <div className="cCarrusel">
-                        <Carousel interval={2000}>
-                          <Carousel.Item>
-                            <Image
-                              src={NBoletin}
-                              text=""
-                              alt=""
-                              className="carousel-image"
-                            />
-                            <Carousel.Caption></Carousel.Caption>
-                          </Carousel.Item>
-                          <Carousel.Item>
-                            <Image
-                              src={NLogros}
-                              text=""
-                              alt=""
-                              className="carousel-image"
-                            />
-                            <Carousel.Caption></Carousel.Caption>
-                          </Carousel.Item>
-                          <Carousel.Item>
-                            <Image
-                              src={NRecuerda}
-                              text=""
-                              alt=""
-                              className="carousel-image"
-                            />
-                            <Carousel.Caption></Carousel.Caption>
-                          </Carousel.Item>
-                        </Carousel>
+                    <Accordion.Header>
+                      <div className="d-flex justify-content-between align-items-center w-100">
+                        <div>
+                          <span>
+                            <strong>{sesion.NombreSesion}</strong> {sesion.DescripcionSesion}
+                          </span>
+                          <br />
+                          <span>{fechaFormateada}</span>
+                        </div>
+                        <div>
+                          <Button
+                            variant={estadoButtonVariant}
+                            size="sm"
+                            className="oval-button"
+                          >
+                            {sesion.Estado}
+                          </Button>
+                        </div>
                       </div>
-                    </Col>
-                  </Row>
-                </Col>
+                    </Accordion.Header>
+                    <Accordion.Body>
+                      Horario: {sesion.Horario}
+                      <br />
+                      Asistencia: Asistencia Marcada
+                      <br />
+                      Descripcion: {sesion.DescripcionSesion}
+                      <br />
+                      <Button
+                        variant="primary"
+                        size="sm"
+                        rounded
+                        className="me-2"
+                      >
+                        Ingresar a la grabación
+                      </Button>
+                      <Button
+                        variant="primary"
+                        size="sm"
+                        rounded
+                        onClick={validar}
+                      >
+                        Ver asistentes
+                      </Button>
+                      <a
+                        href={sesion.LinkSesion}
+                        className="btn btn-primary btn-sm rounded"
+                      >
+                        Iniciar Sesión
+                      </a>
+                    </Accordion.Body>
+                  </Accordion.Item>
+                );
+              })}
+            </Accordion>
+          </Col>
+          <Col className="bg-gradient-to-r from-fuchsia-50 border">
+            <strong>Recursos:</strong>
+            <ListGroup>
+              <ListGroup.Item>
+                <a href="#kit" className="list-group-link">
+                  <div className="nav-item">
+                    <img
+                      className="nav-icon"
+                      src={Recurso}
+                      alt=""
+                      width="16"
+                      height="16"
+                    />
+                    {"  "}
+                    <span className="hover-recursos">Kit del Programador</span>
+                  </div>
+                </a>
+              </ListGroup.Item>
+              <ListGroup.Item>
+                <a href="#ct" className="list-group-link">
+                  <div className="nav-item">
+                    <img
+                      className="nav-icon"
+                      src={Recurso}
+                      alt=""
+                      width="16"
+                      height="16"
+                    />
+                    {"  "}
+                    <span className="hover-recursos">Actividades Estudiantes</span>
+                  </div>
+                </a>
+              </ListGroup.Item>
+              <ListGroup.Item>
+                <a href="#mat" className="list-group-link">
+                  <div className="nav-item">
+                    <img
+                      className="nav-icon"
+                      src={Recurso}
+                      alt=""
+                      width="16"
+                      height="16"
+                    />
+                    {"  "}
+                    <span className="hover-recursos">Material de Clase</span>
+                  </div>
+                </a>
+              </ListGroup.Item>
+              <ListGroup.Item>
+                <a href="#con" className="list-group-link">
+                  <div className="nav-item">
+                    <img
+                      className="nav-icon"
+                      src={Recurso}
+                      alt=""
+                      width="16"
+                      height="16"
+                    />
+                    {"  "}
+                    <span className="hover-recursos">Contenido Tematico</span>
+                  </div>
+                </a>
+              </ListGroup.Item>
+            </ListGroup>
+            <br />
+            <strong>Boletin Informativo:</strong>
+            <div className="cCarrusel">
+              <Carousel interval={2000}>
+                <Carousel.Item>
+                  <Image
+                    src={NBoletin}
+                    text=""
+                    alt=""
+                    className="carousel-image"
+                  />
+                  <Carousel.Caption></Carousel.Caption>
+                </Carousel.Item>
+                <Carousel.Item>
+                  <Image
+                    src={NLogros}
+                    text=""
+                    alt=""
+                    className="carousel-image"
+                  />
+                  <Carousel.Caption></Carousel.Caption>
+                </Carousel.Item>
+                <Carousel.Item>
+                  <Image
+                    src={NRecuerda}
+                    text=""
+                    alt=""
+                    className="carousel-image"
+                  />
+                  <Carousel.Caption></Carousel.Caption>
+                </Carousel.Item>
+              </Carousel>
+            </div>
+          </Col>
+        </Row>
+      </Col>
     </div>
-  )
+  );
 }

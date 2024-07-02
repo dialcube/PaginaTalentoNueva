@@ -9,50 +9,52 @@ import {
   ListGroup,
   ProgressBar,
   Carousel,
+  InputGroup,
+  FormControl
 } from "react-bootstrap";
-
-import { InputGroup, FormControl } from "react-bootstrap";
 import { FaSearch } from "react-icons/fa";
 import Recurso from "../Img/Recursos.svg";
 import NBoletin from "../Img/NBoletin.png";
 import NLogros from "../Img/NLogros.png";
 import NRecuerda from "../Img/NRecuerda.png";
 import { useNavigate } from "react-router-dom";
+import "./TalentoMejorada.css";
 
 export default function Inicio() {
-  const url = "http://localhost:8080/sesiones/";
+  // Asegúrate de que la URL esté bien definida
+  const url = process.env.REACT_APP_API_BACK + "/sesiones/";
+
   const [sesiones, setSesiones] = useState([]);
 
+  // useEffect para llamar a getSesiones cuando el componente se monta
   useEffect(() => {
-    getSesiones();
-  }, []);
+    const getSesiones = async () => {
+      try {
+        const response = await axios.get(url);
+        setSesiones(response.data.results);
+      } catch (error) {
+        console.error("Error fetching sesiones:", error);
+      }
+    };
 
-  const getSesiones = async () => {
-    try {
-      const response = await axios.get(url);
-      setSesiones(response.data.results); // Asumo que el formato de respuesta tiene un campo 'results'
-    } catch (error) {
-      console.error("Error fetching sesiones:", error);
-    }
-  };
+    getSesiones();
+  }, [url]); // Incluye `url` como dependencia
 
   const navigate = useNavigate();
+
+  // Función para manejar la navegación
   const validar = (ev) => {
-    ev.preventDefault(); //evito que el formlario se recargue al dar presionar el button
-    navigate("/asistenciassesiones");
+    ev.preventDefault(); // Evitar que el formulario se recargue al presionar el botón
+    navigate("../talentomejorada/asistenciassesiones");
   };
+
   return (
     <div>
       <Col>
         <br />
-        <h2 className="text-blue-600/100 text-center">
-          Desarrollo Web Full Stack{" "}
-        </h2>
+        <h2 className="text-blue-600/100 text-center">Desarrollo Web Full Stack</h2>
 
-        <InputGroup
-          className="mb-3"
-          style={{ maxWidth: "400px", maxHeight: "20px" }}
-        >
+        <InputGroup className="mb-3" style={{ maxWidth: "400px", maxHeight: "20px" }}>
           <FormControl
             placeholder="Search"
             aria-label="Search"
@@ -71,7 +73,6 @@ export default function Inicio() {
             sm={12}
             md="10"
             lg="8"
-            // xl={500}
             style={{ maxHeight: "500px", overflowY: "auto" }}
             className="bg-gradient-to-r from-fuchsia-50"
           >
@@ -82,53 +83,7 @@ export default function Inicio() {
               label={`${70}%`}
               rounded
             />
-            {/* col1 contenido */}
-            {/* <Accordion flush className="p-3">
-                      {sesiones.map((sesion) => (
-                        const fecha = new Date(sesion.FechaSesion);
-                        const opciones = { year: 'numeric', month: 'long', day: 'numeric' };
-                        const fechaFormateada = new Intl.DateTimeFormat('es-ES', opciones).format(fecha);                         
-                        <Accordion.Item eventKey="0" className="item-acordeon">
-                          <Accordion.Header>
-                            <div className="d-flex justify-content-between align-items-center w-100">
-                              <div>
-                                <span>
-                                  <strong>{sesion.NombreSesion}</strong> {sesion.DescripcionSesion}
-                                </span>
-                                <br />
-                                <span>{sesion.FechaSesion}</span>
-                              </div>
-                              <div>
-                                <Button
-                                  variant="danger"
-                                  size="sm"
-                                  className="oval-button"
-                                >
-                                  {sesion.Estado}
-                                </Button>
-                              </div>
-                            </div>
-                          </Accordion.Header>
-                          <Accordion.Body>
-                            Horario: {sesion.Horario}
-                            <br />
-                            Asistencia: Asistencia Marcada
-                            <br />
-                            Descripcion: {sesion.DescripcionSesion}
-                            <br />
-                            <Button variant="primary" size="sm" rounded  className="me-2">
-                              Ingresar a la grabación
-                            </Button>
-                            <Button variant="primary" size="sm" rounded onClick={validar} >
-                              Ver asistentes
-                            </Button>
-                            <a href={sesion.LinkSesion} className="btn btn-primary btn-sm rounded">
-                              Iniciar Sesión 
-                            </a>
-                          </Accordion.Body>
-                        </Accordion.Item>
-                        ))}                        
-                      </Accordion> */}
+
             <Accordion flush className="p-3">
               {sesiones.map((sesion) => {
                 const fecha = new Date(sesion.FechaSesion);
@@ -137,10 +92,7 @@ export default function Inicio() {
                   month: "long",
                   day: "numeric",
                 };
-                const fechaFormateada = new Intl.DateTimeFormat(
-                  "es-ES",
-                  opciones
-                ).format(fecha);
+                const fechaFormateada = new Intl.DateTimeFormat("es-ES", opciones).format(fecha);
 
                 let estadoButtonVariant = "";
                 switch (sesion.Estado) {
@@ -165,8 +117,7 @@ export default function Inicio() {
                       <div className="d-flex justify-content-between align-items-center w-100">
                         <div>
                           <span>
-                            <strong>{sesion.NombreSesion}</strong>{" "}
-                            {sesion.DescripcionSesion}
+                            <strong>{sesion.NombreSesion}</strong> {sesion.DescripcionSesion}
                           </span>
                           <br />
                           <span>{fechaFormateada}</span>
@@ -221,7 +172,7 @@ export default function Inicio() {
             <strong>Recursos:</strong>
             <ListGroup>
               <ListGroup.Item>
-                <a href="#kit" className="list-group-link  ">
+                <a href="#kit" className="list-group-link">
                   <div className="nav-item">
                     <img
                       className="nav-icon"
@@ -246,9 +197,7 @@ export default function Inicio() {
                       height="16"
                     />
                     {"  "}
-                    <span className="hover-recursos">
-                      Actividades Estudiantes
-                    </span>
+                    <span className="hover-recursos">Actividades Estudiantes</span>
                   </div>
                 </a>
               </ListGroup.Item>

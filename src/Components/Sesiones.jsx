@@ -5,26 +5,32 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import Adicionar from "../Img/Adicionar.svg";
 
 export default function Sesiones() {
-  const url = 'http://localhost:8080/sesiones/';
-  const [sesiones, setSesiones] = useState([]);
   const navigate = useNavigate();
+  const url = process.env.REACT_APP_API_BACK + "/sesiones/";
+  const [sesiones, setSesiones] = useState([]);
 
+  // useEffect para llamar a getSesiones cuando el componente se monta
   useEffect(() => {
-    getSesiones();
-  }, []);
+    const getSesiones = async () => {
+      try {
+        const response = await axios.get(url);
+        setSesiones(response.data.results);
+      } catch (error) {
+        console.error("Error fetching sesiones:", error);
+      }
+    };
 
-  const getSesiones = async () => {
-    try {
-      const response = await axios.get(url);
-      setSesiones(response.data.results); // Asumo que el formato de respuesta tiene un campo 'results'
-    } catch (error) {
-      console.error('Error fetching sesiones:', error);
-    }
-  }
+    getSesiones();
+  }, [url]); // Incluye `url` como dependencia
+
 
   const validar = (ev) => {
     ev.preventDefault();
-    navigate("/crearsesiones");
+    navigate("../talentomejorada/crearsesiones");
+  };
+  const validarE = (ev) => {
+    ev.preventDefault();
+    navigate("../talentomejorada/editarsesion");
   };
 
   // Función para formatear la fecha
@@ -66,8 +72,9 @@ export default function Sesiones() {
                 <td>{formatDate(sesion.FechaSesion)}</td>
                 <td>
                   <a
-                    href={`/editarsesion/${sesion.IdSesion}`}
+                    href={`./editarsesion/${sesion.IdSesion}`}
                     className="btn btn-outline-success"
+                    onClick={validarE}
                   >
                     Editar
                   </a>

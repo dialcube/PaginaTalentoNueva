@@ -117,8 +117,10 @@
 
   .copciones{
       
-    height: auto; 
+    /* height: auto;  */
     /* border: 1px solid #ccc; */
+    max-height: 700px;
+    overflow-y: auto;
    
   }
 

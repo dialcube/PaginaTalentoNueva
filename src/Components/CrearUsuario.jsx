@@ -4,7 +4,9 @@ import axios from 'axios';
 
 export default function CrearUsuario() {
   const navigate = useNavigate();
-  const url = 'http://localhost:8080/usuario/crear';
+  // const url = 'http://localhost:8080/usuario/crear';
+  const url = process.env.REACT_APP_API_BACK + "/usuario/crear";
+
 
   const [tipoDocumento, setTipoDocumento] = useState('');
   const [identificacion, setIdentificacion] = useState(''); // Estado inicial como string
@@ -12,6 +14,7 @@ export default function CrearUsuario() {
   const [apellidos, setApellidos] = useState('');
   const [email, setEmail] = useState('');
   const [rol, setRol] = useState('');
+
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -33,7 +36,8 @@ export default function CrearUsuario() {
         Nombres: nombres,
         Apellidos: apellidos,
         Email: email,
-        Rol: rol
+        Rol: rol,
+        Password:identificacion
       });
 
       console.log('Respuesta del servidor:', response.data);
@@ -48,7 +52,7 @@ export default function CrearUsuario() {
 
       // Mostrar mensaje de éxito o redirigir a otra página
       alert('Usuario creado exitosamente!');
-	    navigate("/usuarios");
+	    navigate("../talentomejorada/usuarios");
     } catch (error) {
       console.error('Error al crear usuario:', error);
       // Mostrar mensaje de error al usuario
@@ -158,6 +162,9 @@ export default function CrearUsuario() {
         <button type="submit" className="btn btn-primary">
           Guardar
         </button>
+        <a href="talentomejorada/usuarios" className="btn btn-outline-danger">
+          Cancelar
+        </a>
         {/* Opcional: Cancelar la creación */}
         {/* <a href="/usuarios" className="btn btn-outline-danger">
           Cancelar

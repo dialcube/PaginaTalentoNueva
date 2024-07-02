@@ -37,7 +37,7 @@ create table CURSOS
 (
    IdCurso              integer not null auto_increment,
    Nombre               varchar(30),
-   Descrpcion           varchar(100),
+   Descripcion           varchar(100),
    Nivel                varchar(20),
    Horas                integer,
    Activo               boolean,

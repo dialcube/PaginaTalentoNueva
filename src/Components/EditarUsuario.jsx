@@ -5,9 +5,7 @@ import axios from "axios";
 export default function EditarUsuario() {
   const navigate = useNavigate();
   const { id } = useParams(); // Obtener el ID del usuario de los parámetros de la URL
-  // const url = `http://localhost:8080/usuario/editar/${id}`;
-  const url = `${process.env.REACT_APP_API_BACK}/usuario/editar/${id}}`;
-
+  const url = `${process.env.REACT_APP_API_BACK}/usuario/editar/${id}`;
 
   const [tipoDocumento, setTipoDocumento] = useState("");
   const [identificacion, setIdentificacion] = useState("");
@@ -16,22 +14,23 @@ export default function EditarUsuario() {
   const [email, setEmail] = useState("");
   const [rol, setRol] = useState("");
   const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState(""); // Estado para la confirmación de la contraseña
+  const [confirmPassword, setConfirmPassword] = useState("");
 
-  // Cargar los datos del usuario al montar el componente
+  const [errors, setErrors] = useState({});
+
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await axios.get(`http://localhost:8080/usuario/${id}`);
+        const response = await axios.get(`${process.env.REACT_APP_API_BACK}/usuario/${id}`);
         const userData = response.data;
         setTipoDocumento(userData.Tipo_Id);
         setIdentificacion(userData.Identificacion);
         setNombres(userData.Nombres);
         setApellidos(userData.Apellidos);
         setEmail(userData.Email);
-        setRol(userData.Rol); // Configurar el estado 'rol' con el valor correcto del usuario
+        setRol(userData.Rol);
         setPassword(userData.Password);
-        setConfirmPassword(userData.Password); // Inicializar confirmPassword con el mismo valor de password
+        setConfirmPassword(userData.Password);
       } catch (error) {
         console.error("Error al obtener los datos del usuario:", error);
       }
@@ -51,39 +50,46 @@ export default function EditarUsuario() {
     } else if (name === "Apellidos") {
       setApellidos(value);
     } else if (name === "Email") {
-      setEmail(value); // Actualizar el estado del email
+      setEmail(value);
     } else if (name === "Rol") {
       setRol(value);
     } else if (name === "Password") {
       setPassword(value);
     } else if (name === "ConfirmPassword") {
-      setConfirmPassword(value); // Actualizar el estado de confirmación de la contraseña
+      setConfirmPassword(value);
     }
   };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    // Verificar que las contraseñas coincidan
-    if (password !== confirmPassword) {
-      alert("Las contraseñas no coinciden");
+    const newErrors = {};
+    if (!tipoDocumento) newErrors.tipoDocumento = "El tipo de documento es obligatorio";
+    if (!identificacion) newErrors.identificacion = "El número de identificación es obligatorio";
+    if (!nombres) newErrors.nombres = "Los nombres son obligatorios";
+    if (!apellidos) newErrors.apellidos = "Los apellidos son obligatorios";
+    if (!email) newErrors.email = "El correo electrónico es obligatorio";
+    if (!rol) newErrors.rol = "El rol es obligatorio";
+    if (!password) newErrors.password = "La contraseña es obligatoria";
+    if (password !== confirmPassword) newErrors.confirmPassword = "Las contraseñas no coinciden";
+
+    setErrors(newErrors);
+
+    if (Object.keys(newErrors).length > 0) {
       return;
     }
 
     try {
-      // Convertir identificacion a número (si es necesario)
       const identificacionDecimal = parseFloat(identificacion);
 
-      // Validar que identificacionDecimal sea un número válido antes de enviar
       if (isNaN(identificacionDecimal)) {
         alert("El número de identificación no es válido");
         return;
       }
 
-      // Realizar la solicitud PUT al backend con los datos del formulario
       const response = await axios.put(url, {
         Tipo_Id: tipoDocumento,
-        Identificacion: identificacionDecimal, // Enviar como número decimal
+        Identificacion: identificacionDecimal,
         Nombres: nombres,
         Apellidos: apellidos,
         Email: email,
@@ -93,12 +99,10 @@ export default function EditarUsuario() {
 
       console.log("Respuesta del servidor:", response.data);
 
-      // Mostrar mensaje de éxito o redirigir a otra página
       alert("Usuario actualizado exitosamente!");
       navigate("../talentomejorada/usuarios");
     } catch (error) {
       console.error("Error al actualizar usuario:", error);
-      // Mostrar mensaje de error al usuario
       alert("Error al actualizar usuario. Por favor, intenta nuevamente.");
     }
   };
@@ -112,11 +116,12 @@ export default function EditarUsuario() {
             Tipo Documento
           </label>
           <select
-            className="form-control"
+            className={`form-control ${errors.tipoDocumento ? "is-invalid" : ""}`}
             id="Tipo_Id"
             name="Tipo_Id"
             value={tipoDocumento}
             onChange={handleChange}
+            required
           >
             <option value="" disabled>
               Seleccione un tipo de documento
@@ -125,6 +130,7 @@ export default function EditarUsuario() {
             <option value="TI">Tarjeta de Identidad</option>
             <option value="CE">Cédula de Extranjería</option>
           </select>
+          {errors.tipoDocumento && <div className="invalid-feedback">{errors.tipoDocumento}</div>}
         </div>
         <div className="mb-3">
           <label htmlFor="Identificacion" className="form-label">
@@ -132,13 +138,15 @@ export default function EditarUsuario() {
           </label>
           <input
             type="text"
-            className="form-control"
+            className={`form-control ${errors.identificacion ? "is-invalid" : ""}`}
             name="Identificacion"
             id="Identificacion"
             value={identificacion}
             onChange={handleChange}
+            required
             placeholder="Ingrese Documento"
           />
+          {errors.identificacion && <div className="invalid-feedback">{errors.identificacion}</div>}
         </div>
         <div className="mb-3">
           <label htmlFor="Nombres" className="form-label">
@@ -146,13 +154,15 @@ export default function EditarUsuario() {
           </label>
           <input
             type="text"
-            className="form-control"
+            className={`form-control ${errors.nombres ? "is-invalid" : ""}`}
             name="Nombres"
             id="Nombres"
             value={nombres}
             onChange={handleChange}
+            required
             placeholder="Ingrese Nombres"
           />
+          {errors.nombres && <div className="invalid-feedback">{errors.nombres}</div>}
         </div>
         <div className="mb-3">
           <label htmlFor="Apellidos" className="form-label">
@@ -160,13 +170,15 @@ export default function EditarUsuario() {
           </label>
           <input
             type="text"
-            className="form-control"
+            className={`form-control ${errors.apellidos ? "is-invalid" : ""}`}
             name="Apellidos"
             id="Apellidos"
             value={apellidos}
             onChange={handleChange}
+            required
             placeholder="Ingrese Apellidos"
           />
+          {errors.apellidos && <div className="invalid-feedback">{errors.apellidos}</div>}
         </div>
         <div className="mb-3">
           <label htmlFor="Email" className="form-label">
@@ -174,24 +186,27 @@ export default function EditarUsuario() {
           </label>
           <input
             type="email"
-            className="form-control"
+            className={`form-control ${errors.email ? "is-invalid" : ""}`}
             name="Email"
             id="Email"
             value={email}
             onChange={handleChange}
+            required
             placeholder="Ingrese Email"
           />
+          {errors.email && <div className="invalid-feedback">{errors.email}</div>}
         </div>
         <div className="mb-3">
           <label htmlFor="rol" className="form-label">
             Rol
           </label>
           <select
-            className="form-control"
+            className={`form-control ${errors.rol ? "is-invalid" : ""}`}
             id="rol"
             name="Rol"
-            value={rol} // Usar el estado 'rol' para seleccionar el valor actual del usuario
+            value={rol}
             onChange={handleChange}
+            required
           >
             <option value="" disabled>
               Seleccione un rol
@@ -200,42 +215,43 @@ export default function EditarUsuario() {
             <option value="A">Administrador</option>
             <option value="D">Docente</option>
           </select>
+          {errors.rol && <div className="invalid-feedback">{errors.rol}</div>}
         </div>
-
         <div className="mb-3">
           <label htmlFor="Password" className="form-label">
             Password
           </label>
           <input
             type="password"
-            className="form-control"
+            className={`form-control ${errors.password ? "is-invalid" : ""}`}
             name="Password"
             id="Password"
             value={password}
             onChange={handleChange}
+            required
             placeholder="Ingrese Password"
           />
+          {errors.password && <div className="invalid-feedback">{errors.password}</div>}
         </div>
-
         <div className="mb-3">
           <label htmlFor="ConfirmPassword" className="form-label">
             Confirmar Password
           </label>
           <input
             type="password"
-            className="form-control"
+            className={`form-control ${errors.confirmPassword ? "is-invalid" : ""}`}
             name="ConfirmPassword"
             id="ConfirmPassword"
             value={confirmPassword}
             onChange={handleChange}
+            required
             placeholder="Confirme Password"
           />
+          {errors.confirmPassword && <div className="invalid-feedback">{errors.confirmPassword}</div>}
         </div>
-
         <button type="submit" className="btn btn-primary">
           Guardar
         </button>
-        {/* Opcional: Cancelar la edición */}
         <a href="../usuarios" className="btn btn-outline-danger">
           Cancelar
         </a>

@@ -7,28 +7,45 @@ export default function CrearUsuario() {
   // const url = 'http://localhost:8080/usuario/crear';
   const url = process.env.REACT_APP_API_BACK + "/usuario/crear";
 
-
   const [tipoDocumento, setTipoDocumento] = useState('');
-  const [identificacion, setIdentificacion] = useState(''); // Estado inicial como string
+  const [identificacion, setIdentificacion] = useState(''); 
   const [nombres, setNombres] = useState('');
   const [apellidos, setApellidos] = useState('');
   const [email, setEmail] = useState('');
   const [rol, setRol] = useState('');
 
+  const [errors, setErrors] = useState({});
 
   const handleSubmit = async (event) => {
     event.preventDefault();
 
+    // Validar que todos los campos estén llenos
+    const newErrors = {};
+    if (!tipoDocumento) newErrors.tipoDocumento = 'El tipo de documento es obligatorio';
+    if (!identificacion) newErrors.identificacion = 'El número de identificación es obligatorio';
+    if (!nombres) newErrors.nombres = 'Los nombres son obligatorios';
+    if (!apellidos) newErrors.apellidos = 'Los apellidos son obligatorios';
+    if (!email) newErrors.email = 'El correo electrónico es obligatorio';
+    if (!rol) newErrors.rol = 'El rol es obligatorio';
+
+    // Actualizar los errores en el estado
+    setErrors(newErrors);
+
+    // Si hay errores, no enviar el formulario
+    if (Object.keys(newErrors).length > 0) {
+      return;
+    }
+
+    // Convertir identificacion a número (si es necesario)
+    const identificacionDecimal = parseFloat(identificacion);
+
+    // Validar que identificacionDecimal sea un número válido antes de enviar
+    if (isNaN(identificacionDecimal)) {
+      alert('El número de identificación no es válido');
+      return;
+    }
+
     try {
-      // Convertir identificacion a número (si es necesario)
-      const identificacionDecimal = parseFloat(identificacion);
-
-      // Validar que identificacionDecimal sea un número válido antes de enviar
-      if (isNaN(identificacionDecimal)) {
-        alert('El número de identificación no es válido');
-        return;
-      }
-
       // Realizar la solicitud POST al backend con los datos del formulario
       const response = await axios.post(url, {
         Tipo_Id: tipoDocumento,
@@ -37,7 +54,7 @@ export default function CrearUsuario() {
         Apellidos: apellidos,
         Email: email,
         Rol: rol,
-        Password:identificacion
+        Password: identificacion
       });
 
       console.log('Respuesta del servidor:', response.data);
@@ -52,7 +69,7 @@ export default function CrearUsuario() {
 
       // Mostrar mensaje de éxito o redirigir a otra página
       alert('Usuario creado exitosamente!');
-	    navigate("../talentomejorada/usuarios");
+      navigate("../talentomejorada/usuarios");
     } catch (error) {
       console.error('Error al crear usuario:', error);
       // Mostrar mensaje de error al usuario
@@ -69,11 +86,12 @@ export default function CrearUsuario() {
             Tipo Documento
           </label>
           <select
-            className="form-control"
+            className={`form-control ${errors.tipoDocumento ? 'is-invalid' : ''}`}
             id="Tipo_Id"
             name="Tipo_Id"
             value={tipoDocumento}
             onChange={(e) => setTipoDocumento(e.target.value)}
+            required
           >
             <option value="" disabled>
               Seleccione un tipo de documento
@@ -82,20 +100,23 @@ export default function CrearUsuario() {
             <option value="TI">Tarjeta de Identidad</option>
             <option value="CE">Cedula de Extrangeria</option>
           </select>
+          {errors.tipoDocumento && <div className="invalid-feedback">{errors.tipoDocumento}</div>}
         </div>
         <div className="mb-3">
           <label htmlFor="Identificacion" className="form-label">
             Documento
           </label>
           <input
-            type="text" // Mantener tipo text para manejar como string
-            className="form-control"
+            type="text"
+            className={`form-control ${errors.identificacion ? 'is-invalid' : ''}`}
             name="Identificacion"
             id="Identificacion"
             value={identificacion}
             onChange={(e) => setIdentificacion(e.target.value)}
+            required
             placeholder="Ingrese Documento"
           />
+          {errors.identificacion && <div className="invalid-feedback">{errors.identificacion}</div>}
         </div>
         <div className="mb-3">
           <label htmlFor="Nombres" className="form-label">
@@ -103,13 +124,15 @@ export default function CrearUsuario() {
           </label>
           <input
             type="text"
-            className="form-control"
+            className={`form-control ${errors.nombres ? 'is-invalid' : ''}`}
             name="Nombres"
             id="Nombres"
             value={nombres}
             onChange={(e) => setNombres(e.target.value)}
+            required
             placeholder="Ingrese Nombres"
           />
+          {errors.nombres && <div className="invalid-feedback">{errors.nombres}</div>}
         </div>
         <div className="mb-3">
           <label htmlFor="Apellidos" className="form-label">
@@ -117,13 +140,15 @@ export default function CrearUsuario() {
           </label>
           <input
             type="text"
-            className="form-control"
+            className={`form-control ${errors.apellidos ? 'is-invalid' : ''}`}
             name="Apellidos"
             id="Apellidos"
             value={apellidos}
             onChange={(e) => setApellidos(e.target.value)}
+            required
             placeholder="Ingrese Apellidos"
           />
+          {errors.apellidos && <div className="invalid-feedback">{errors.apellidos}</div>}
         </div>
         <div className="mb-3">
           <label htmlFor="email" className="form-label">
@@ -131,24 +156,27 @@ export default function CrearUsuario() {
           </label>
           <input
             type="email"
-            className="form-control"
+            className={`form-control ${errors.email ? 'is-invalid' : ''}`}
             name="email"
             id="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            required
             placeholder="Ingrese Email"
           />
+          {errors.email && <div className="invalid-feedback">{errors.email}</div>}
         </div>
         <div className="mb-3">
           <label htmlFor="rol" className="form-label">
             Rol
           </label>
           <select
-            className="form-control"
+            className={`form-control ${errors.rol ? 'is-invalid' : ''}`}
             id="rol"
             name="rol"
             value={rol}
             onChange={(e) => setRol(e.target.value)}
+            required
           >
             <option value="" disabled>
               Seleccione un rol
@@ -157,6 +185,7 @@ export default function CrearUsuario() {
             <option value="A">Administrador</option>
             <option value="D">Docente</option>
           </select>
+          {errors.rol && <div className="invalid-feedback">{errors.rol}</div>}
         </div>
 
         <button type="submit" className="btn btn-primary">
@@ -165,10 +194,6 @@ export default function CrearUsuario() {
         <a href="talentomejorada/usuarios" className="btn btn-outline-danger">
           Cancelar
         </a>
-        {/* Opcional: Cancelar la creación */}
-        {/* <a href="/usuarios" className="btn btn-outline-danger">
-          Cancelar
-        </a> */}
       </form>
     </div>
   );

@@ -71,7 +71,7 @@ export default function Login() {
         onSubmit={handleSubmit}
         style={{ backgroundColor: "rgba(255, 255, 255, 0.8)" }} // Fondo con transparencia
       >
-        <h2 className="text-center mb-4">Inicio Sesion prueba</h2>
+        <h2 className="text-center mb-4">Inicio de Sesion</h2>
         <input
           type="text"
           name="Email"

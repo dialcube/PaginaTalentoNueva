@@ -21,12 +21,11 @@ import { useNavigate } from "react-router-dom";
 import "./TalentoMejorada.css";
 
 export default function Inicio() {
-  // Asegúrate de que la URL esté bien definida
   const url = process.env.REACT_APP_API_BACK + "/sesiones/";
 
   const [sesiones, setSesiones] = useState([]);
+  const navigate = useNavigate();
 
-  // useEffect para llamar a getSesiones cuando el componente se monta
   useEffect(() => {
     const getSesiones = async () => {
       try {
@@ -38,15 +37,35 @@ export default function Inicio() {
     };
 
     getSesiones();
-  }, [url]); // Incluye `url` como dependencia
+  }, [url]);
 
-  const navigate = useNavigate();
-
-  // Función para manejar la navegación
-  const validar = (ev) => {
+  // Función para manejar la navegación y asignar variables de sesión
+  const validar = (ev, IdCurso, IdSesion) => {
     ev.preventDefault(); // Evitar que el formulario se recargue al presionar el botón
+    sessionStorage.setItem("IdCurso", IdCurso);
+    sessionStorage.setItem("IdSesion", IdSesion);
     navigate("../talentomejorada/asistenciassesiones");
   };
+
+  const crearAsistencia = async (IdCurso,IdSesion,IdUsuario) => {
+    try {
+      // const response = await axios.delete(`http://localhost:8080/usuario/${idUsuario}`);
+      const url = `${process.env.REACT_APP_API_BACK}/sesionesusuario/crear`;
+
+      const response = await axios.post(url, {
+        IdCurso: IdCurso,
+        IdSesion: IdSesion,
+        IdUsuario: IdUsuario
+      });
+
+
+      console.log('asistencia creada:', response.data);
+     
+    } catch (error) {
+      console.error('Error creando asistencia:', error);
+    }
+  };
+
 
   return (
     <div>
@@ -152,13 +171,20 @@ export default function Inicio() {
                         variant="primary"
                         size="sm"
                         rounded
-                        onClick={validar}
+                        onClick={(ev) => validar(ev, sesion.IdCurso, sesion.IdSesion)}
                       >
                         Ver asistentes
-                      </Button>
+                      </Button                      >
+                     
                       <a
+                      onClick={() => {
+                          crearAsistencia(sesion.IdCurso, sesion.IdSesion,sessionStorage.getItem("IdUsuario"));
+                        
+                      }}
                         href={sesion.LinkSesion}
                         className="btn btn-primary btn-sm rounded"
+                        target="_blank"
+                        rel="noopener noreferrer" // Agrega rel para seguridad
                       >
                         Iniciar Sesión
                       </a>

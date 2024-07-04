@@ -1,97 +1,99 @@
-import React from "react";
-
+import React, { useEffect, useState, useCallback } from "react";
+import axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
 
+export default function AsistenciaSesiones() {
+  const [asistentes, setAsistentes] = useState([]);
+  const [noAsistentes, setNoAsistentes] = useState([]);
 
-export default function AsistenciasSesiones() {
+  const url = `${process.env.REACT_APP_API_BACK}/sesionesusuario/`;
+
+  const getSesionesUsuario = useCallback(async () => {
+    try {
+      const response = await axios.post(url, {
+        IdCurso: sessionStorage.getItem("IdCurso"),
+        IdSesion: sessionStorage.getItem("IdSesion")
+      });
+
+      // Separar usuarios en asistentes y no asistentes
+      const asistieron = response.data.results.filter(usuario => usuario.Asistencia === "Si");
+      const noAsistieron = response.data.results.filter(usuario => usuario.Asistencia === "No");
+
+      setAsistentes(asistieron);
+      setNoAsistentes(noAsistieron);
+    } catch (error) {
+      console.error("Error fetching usuarios:", error);
+    }
+  }, [url]);
+
+  useEffect(() => {
+    getSesionesUsuario();
+  }, [getSesionesUsuario]);
+
+  // Función para formatear fecha y hora
+  const formatearFechaHora = (fechaHora) => {
+    return new Date(fechaHora).toLocaleString();
+  };
 
   return (
     <div>
-       
-      <h2>Asistencias</h2>
-      <br/>
-      <h3 className="text-blue-600/100 ">Asistentes</h3>
-      <table class="table table-stripped table-hover">
-        <thead>
-          <tr>
-         
-            <th scope="col">Cedula</th>
-            <th scope="col">Nombres</th>
-            <th scope="col">Apellidos</th>
-            <th scope="col">Email</th>
-            
-          </tr>
-        </thead>
-        <tbody>
-          {/* <% results.forEach((user)=> { %>
-          <tr>
-            <th scope="row"><%= user.idUsuario %></th>
-            <td><%= user.Identificacion %></td>
-            <td><%= user.nombres %></td>
-            <td><%= user.apellidos %></td>
-            <td><%= user.email %></td>           
-            <td><%= user.roll %></td>
-            <td>
-                <a href="/editarusuario/<%= user.id %>" class="btn btn-outline-success">Editar</a>
-                <a href="/eliminarusuario/<%= user.id %>" class="btn btn-outline-danger" onclick="return confirm('¿Estás seguro de que deseas eliminar este usuario?');">Eliminar</a>
-            </td>
-          </tr>
-          <%})%> */}
+      <h2>Usuarios Sesion:{sessionStorage.getItem("IdSesion")}</h2>
 
-          <tr>
-          
-            <td>16456789</td>
-            <td>usuario1 </td>
-            <td>Apellido 1</td>
-            <td>Email 1</td>
-                     
-          </tr>
-        </tbody>
-      </table>
+      <h3>Asistieron</h3>
+      <div className="table-responsive">
+        <table className="table table-striped table-hover">
+          <thead>
+            <tr>
+              <th scope="col">Curso</th>
+              <th scope="col">Componente</th>
+              <th scope="col">Sesion</th>
+              <th scope="col">Documento</th>
+              <th scope="col">Usuario</th>
+              <th scope="col">Fecha/Hora Ingreso</th>
+            </tr>
+          </thead>
+          <tbody>
+            {asistentes.map((usuario) => (
+              <tr key={usuario.IdUsuario}>
+                <td>{usuario.NombreCurso}</td>
+                <td>{usuario.NombreComponente}</td>
+                <td>{usuario.IdSesion}</td>
+                <td>{usuario.Identificacion}</td>
+                <td>{usuario.NombreUsuario}</td>
+                <td>{formatearFechaHora(usuario.HoraIngreso)}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
 
-      <h3 className="text-blue-600/100 ">Ausentes</h3>
-      <table class="table table-stripped table-hover">
-        <thead>
-          <tr>
-         
-            <th scope="col">Cedula</th>
-            <th scope="col">Nombres</th>
-            <th scope="col">Apellidos</th>
-            <th scope="col">Email</th>
-            
-          </tr>
-        </thead>
-        <tbody>
-          {/* <% results.forEach((user)=> { %>
-          <tr>
-            <th scope="row"><%= user.idUsuario %></th>
-            <td><%= user.Identificacion %></td>
-            <td><%= user.nombres %></td>
-            <td><%= user.apellidos %></td>
-            <td><%= user.email %></td>           
-            <td><%= user.roll %></td>
-            <td>
-                <a href="/editarusuario/<%= user.id %>" class="btn btn-outline-success">Editar</a>
-                <a href="/eliminarusuario/<%= user.id %>" class="btn btn-outline-danger" onclick="return confirm('¿Estás seguro de que deseas eliminar este usuario?');">Eliminar</a>
-            </td>
-          </tr>
-          <%})%> */}
-
-          <tr>
-          
-            <td>1674848</td>
-            <td>usuario2 </td>
-            <td>Apellido 2</td>
-            <td>Email 2</td>
-                    
-          </tr>
-        </tbody>
-      </table>
-
-      <a href="../talentomejorada/Inicio" class="btn btn-outline-primary">
-          Volver
-        </a>
- 
+      <h3>No Asistieron</h3>
+      <div className="table-responsive">
+        <table className="table table-striped table-hover">
+          <thead>
+            <tr>
+              <th scope="col">Curso</th>
+              <th scope="col">Componente</th>
+              <th scope="col">Sesion</th>
+              <th scope="col">Documento</th>
+              <th scope="col">Usuario</th>
+              <th scope="col">Fecha/Hora Ingreso</th>
+            </tr>
+          </thead>
+          <tbody>
+            {noAsistentes.map((usuario) => (
+              <tr key={usuario.IdUsuario}>
+                <td>{usuario.NombreCurso}</td>
+                <td>{usuario.NombreComponente}</td>
+                <td>{usuario.IdSesion}</td>
+                <td>{usuario.Identificacion}</td>
+                <td>{usuario.NombreUsuario}</td>
+                <td></td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }

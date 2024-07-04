@@ -21,7 +21,7 @@ export default function CrearUsuarioCursos() {
       const usuariosFiltrados = response.data.results.filter(Usuarios => Usuarios.Rol === 'E');
        setUsuarios(usuariosFiltrados);
 
-      setUsuarios(response.data.results);
+      // setUsuarios(response.data.results);
     } catch (error) {
       console.error("Error fetching usuarios:", error);
     }
